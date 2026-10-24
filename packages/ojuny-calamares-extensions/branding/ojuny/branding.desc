@@ -1,0 +1,38 @@
+---
+componentName: ojuny
+
+welcomeStyleCalamares: false
+welcomeExpandingLogo: false
+windowExpanding: normal
+windowSize: 900px,600px
+windowPlacement: center
+sidebar: widget
+navigation: widget
+
+strings:
+  productName: Ojuny
+  shortProductName: Ojuny
+  version:
+  shortVersion:
+  versionedName: Ojuny
+  shortVersionedName: Ojuny
+  bootloaderEntryName: Ojuny
+  productUrl: https://github.com/SDG-Den/ojuny-template
+  supportUrl: https://github.com/SDG-Den/ojuny-template/issues
+  knownIssuesUrl: https://github.com/SDG-Den/ojuny-installer/issues
+  releaseNotesUrl: ""
+  donateUrl: ""
+
+images:
+  productIcon: "logo.svg"
+  productLogo: "logo.svg"
+  productWelcome: "logo.svg"
+
+style:
+  SidebarBackground: "#1b1b1f"
+  SidebarText: "#ffffff"
+  SidebarTextCurrent: "#1b1b1f"
+  SidebarBackgroundCurrent: "#7ebae4"
+
+slideshow: "show.qml"
+slideshowAPI: 2
