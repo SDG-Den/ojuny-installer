@@ -115,6 +115,8 @@
                   yq -e '.componentName == "ojuny"' ${ojuny-calamares-extensions}/share/calamares/branding/ojuny/branding.desc
                   yq -e '.slideshow == "show.qml"' ${ojuny-calamares-extensions}/share/calamares/branding/ojuny/branding.desc
                   test -f ${ojuny-calamares-extensions}/share/calamares/branding/ojuny/show.qml
+                  test -f ${ojuny-calamares-extensions}/share/calamares/branding/ojuny/ojuny-logo.png
+                  test -f ${ojuny-calamares-extensions}/share/calamares/branding/ojuny/ojuny-brand-large.png
                   grep -q 'notesqml@template' ${ojuny-calamares-extensions}/etc/calamares/settings.conf
                   grep -q 'notesqml@origin' ${ojuny-calamares-extensions}/etc/calamares/settings.conf
                   yq -e '.requirements.requiredStorage == 30' ${ojuny-calamares-extensions}/etc/calamares/modules/welcome.conf

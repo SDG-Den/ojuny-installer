@@ -24,15 +24,16 @@ strings:
   donateUrl: ""
 
 images:
-  productIcon: "logo.svg"
-  productLogo: "logo.svg"
-  productWelcome: "logo.svg"
+  productIcon: "ojuny-logo.png"
+  productLogo: "ojuny-logo.png"
+  productBanner: "ojuny-brand-large.png"
+  productWelcome: "ojuny-brand-large.png"
 
 style:
-  SidebarBackground: "#1b1b1f"
-  SidebarText: "#ffffff"
-  SidebarTextCurrent: "#1b1b1f"
-  SidebarBackgroundCurrent: "#7ebae4"
+  SidebarBackground: "#2d353b"
+  SidebarText: "#d3c6aa"
+  SidebarTextCurrent: "#2d353b"
+  SidebarBackgroundCurrent: "#a7c080"
 
 slideshow: "show.qml"
 slideshowAPI: 2

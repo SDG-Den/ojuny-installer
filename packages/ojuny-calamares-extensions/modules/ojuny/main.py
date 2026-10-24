@@ -719,6 +719,7 @@ def install():
     home = os.path.join(root, "home", username)
     clone = os.path.join(home, clone_relative)
     runtime_clone = os.path.join("/home", username, clone_relative)
+    staging = tempfile.mkdtemp(prefix="ojuny-flake-")
 
     shell = "zsh"
     runtime_shell = global_storage.value("userShell") or ""
@@ -769,22 +770,22 @@ def install():
             )
 
         libcalamares.job.setprogress(0.06)
-        clone_prepared(template_url, template_token, clone)
-        hostname = prepared_hostname(clone)
+        clone_prepared(template_url, template_token, staging)
+        hostname = prepared_hostname(staging)
 
         libcalamares.job.setprogress(0.18)
         run_script(
             regenerate_hardware,
-            hardware_script_args(clone, root, firmware, device, extra_file),
+            hardware_script_args(staging, root, firmware, device, extra_file),
         )
         git = cmd("git")
-        run_command([cmd("pkexec"), git, "-C", clone, "add", "-A"])
+        run_command([cmd("pkexec"), git, "-C", staging, "add", "-A"])
         run_command(
             [
                 cmd("pkexec"),
                 git,
                 "-C",
-                clone,
+                staging,
                 "-c",
                 "user.name=Ojuny Installer",
                 "-c",
@@ -800,7 +801,7 @@ def install():
             libcalamares.job.setprogress(0.06)
             prepare_args = [
                 "--root",
-                clone,
+                staging,
                 "--template",
                 template_path,
                 "--username",
@@ -831,23 +832,23 @@ def install():
             if regenerate_hardware:
                 run_script(
                     regenerate_hardware,
-                    hardware_script_args(clone, root, firmware, device, extra_file),
+                    hardware_script_args(staging, root, firmware, device, extra_file),
                 )
             else:
                 hardware = generate_hardware(root)
                 write_file(
-                    os.path.join(clone, "modules/07-system/00-hardware.nix"),
+                    os.path.join(staging, "modules/07-system/00-hardware.nix"),
                     hardware_module(hardware, firmware, device, extra_lines),
                 )
         else:
             libcalamares.job.setprogress(0.06)
-            run_command([cmd("pkexec"), cmd("cp"), "-a", template_path, clone])
-            run_command([cmd("pkexec"), cmd("chmod"), "-R", "u+w", clone])
+            run_command([cmd("pkexec"), cmd("cp"), "-a", template_path, staging])
+            run_command([cmd("pkexec"), cmd("chmod"), "-R", "u+w", staging])
 
             libcalamares.job.setprogress(0.18)
             hardware = generate_hardware(root)
             configure_template(
-                clone,
+                staging,
                 runtime_clone,
                 hostname,
                 username,
@@ -872,7 +873,7 @@ def install():
         "--root",
         root,
         "--flake",
-        "{clone}#{hostname}".format(clone=clone, hostname=hostname),
+        "{staging}#{hostname}".format(staging=staging, hostname=hostname),
         "--option",
         "build-dir",
         "/nix/var/nix/builds",
@@ -898,6 +899,13 @@ def install():
     if process.wait() != 0:
         raise RuntimeError("nixos-install failed:\n{}".format("\n".join(output)))
 
+    repos_dir = os.path.dirname(clone)
+    run_command([cmd("pkexec"), cmd("rm"), "-rf", clone])
+    run_command([cmd("pkexec"), cmd("install"), "-d", "-m", "0755", repos_dir])
+    run_command([cmd("pkexec"), cmd("install"), "-d", "-m", "0755", clone])
+    run_command([cmd("pkexec"), cmd("cp"), "-a", staging + "/.", clone])
+    run_command([cmd("pkexec"), cmd("rm"), "-rf", staging])
+
     libcalamares.job.setprogress(0.96)
 
     credential_path = os.path.join(root, "home", username, ".git-credentials")
@@ -921,6 +929,7 @@ def install():
             "could not finish the git setup: {error}".format(error=error)
         )
 
+    run_command([cmd("pkexec"), cmd("chown"), "1000:100", repos_dir])
     run_command([cmd("pkexec"), cmd("chown"), "-R", "1000:100", clone])
     run_command([cmd("pkexec"), cmd("chown"), "1000:100", home])
     if os.path.exists(credential_path):
