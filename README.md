@@ -15,9 +15,9 @@ The modified flake is left in the installed system.
 
 ## Requirements
 
-- Calamares ISO install: 10 GB RAM minimum. 12 GB or 16 GB is recommended. The live environment is roughly 8 GB uncompressed, so 8 GB leaves no headroom.
-- Unattended ISO install: 10 GB RAM minimum.
-- `nix run .#setup` from `ojuny-template`: 8 GB RAM, because it builds the compiled packages from source.
+- Calamares ISO install: 4 GB RAM minimum.
+- Unattended ISO install: 4 GB RAM minimum.
+- `nix run .#setup` from `ojuny-template`: 4 GB RAM, because it builds the compiled packages from source.
 - Network access for all install paths.
 
 ## Build
@@ -67,15 +67,18 @@ firmware="$(nix build --no-link --print-out-paths nixpkgs#OVMF.fd)/FV/OVMF.fd"
 iso="$(echo result/iso/*.iso)"
 
 qemu-system-x86_64 \
-  -enable-kvm -m 16384 -smp 4 -cpu host \
+  -enable-kvm -m 4096 -smp 4 -cpu host \
   -bios "$firmware" \
-  -device virtio-vga \
+  -device virtio-vga-gl \
   -device virtio-keyboard-pci -device virtio-tablet-pci \
   -drive file="$iso",media=cdrom,readonly=on \
   -drive file=/tmp/ojuny-test.qcow2,if=virtio \
   -netdev user,id=net0 -device virtio-net-pci,netdev=net0 \
-  -display gtk
+  -display gtk,gl=on
 ```
+
+The VM needs accelerated virtio graphics (`virtio-vga-gl` with `gl=on`).
+Plain VGA, QXL and 2D `virtio-vga` render the Wayland session incorrectly.
 
 The installer needs network access because `nixos-install` fetches the
 template's flake inputs.

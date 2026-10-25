@@ -75,6 +75,9 @@ repository. The password is hashed with `mkpasswd` before the ISO is built.
 Build the ISO, create a target disk, and boot the ISO as a CD-ROM. Use a
 separate disk for the installation target. The ISO needs user-mode networking.
 
+The VM needs 4 GB RAM and accelerated virtio graphics (`virtio-vga-gl` with
+`gl=on`).
+
 ```sh
 qemu-img create -f qcow2 /tmp/ojuny-unattended.qcow2 30G
 firmware="$(nix build --no-link --print-out-paths nixpkgs#OVMF.fd)/FV/OVMF.fd"
@@ -83,12 +86,12 @@ iso="$(echo result-unattended/*.iso)"
 qemu-system-x86_64 \
   -enable-kvm -m 4096 -smp 4 -cpu host \
   -bios "$firmware" \
-  -device virtio-vga \
+  -device virtio-vga-gl \
   -device virtio-keyboard-pci -device virtio-tablet-pci \
   -drive file="$iso",media=cdrom,readonly=on \
   -drive file=/tmp/ojuny-unattended.qcow2,if=virtio \
   -netdev user,id=net0 -device virtio-net-pci,netdev=net0 \
-  -display gtk
+  -display gtk,gl=on
 ```
 
 The target disk is `/dev/vda` in this QEMU command. Use
