@@ -13,7 +13,6 @@ let
     regenerateHardware =
       (inputs.ojuny-template.packages.${pkgs.system} or { }).regenerate-hardware or null;
     mkpasswd = pkgs.mkpasswd;
-    nixpkgsRev = inputs.nixpkgs.rev or "";
   };
 
   calamares = pkgs.callPackage ../packages/calamares-ojuny.nix {

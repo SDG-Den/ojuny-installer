@@ -80,10 +80,9 @@ qemu-system-x86_64 \
 The installer needs network access because `nixos-install` fetches the
 template's flake inputs.
 
-The Calamares ISO includes the compiled Ojuny GUI packages. For the bundled
-template, the installer aligns the generated flake's nixpkgs lock to the ISO's
-nixpkgs so those store paths are reused. A prepared repository keeps its own
-lock and may rebuild them.
+The Calamares ISO includes the compiled Ojuny GUI packages from the template's
+locked nixpkgs. The installed system uses the same template lock, so those store
+paths are reused. A prepared repository keeps its own lock and may rebuild them.
 
 ## Installed system
 

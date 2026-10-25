@@ -11,7 +11,6 @@
 
     ojuny-template = {
       url = "github:SDG-Den/ojuny-template";
-      inputs.nixpkgs.follows = "nixpkgs";
     };
 
     disko = {
@@ -58,7 +57,6 @@
             prepareRepo = (inputs.ojuny-template.packages.${system} or { }).prepare-repo or null;
             regenerateHardware = (inputs.ojuny-template.packages.${system} or { }).regenerate-hardware or null;
             mkpasswd = pkgs.mkpasswd;
-            nixpkgsRev = inputs.nixpkgs.rev or "";
           };
 
           calamares-ojuny = pkgs.callPackage ./packages/calamares-ojuny.nix {
