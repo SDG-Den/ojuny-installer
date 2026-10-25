@@ -221,7 +221,7 @@ def user_module(username, fullname, hashed_password, shell, version):
         isNormalUser = true;
         uid = 1000;
         description = {fullname};
-        extraGroups = [ "networkmanager" "wheel" ];
+        extraGroups = [ "networkmanager" "wheel" "video" "input" ];
         hashedPassword = {hashed_password};
         openssh.authorizedKeys.keys = [ ];
         ojunyShell = "{shell}";

@@ -23,6 +23,7 @@ in
   imports = [
     (modulesPath + "/installer/cd-dvd/installation-cd-graphical-base.nix")
 
+    inputs.ojuny-template.modules.nixos.system-graphics
     inputs.ojuny-template.modules.nixos.desktop-mango
     inputs.ojuny-template.modules.nixos.desktop-mangosettings
     inputs.ojuny-template.modules.nixos.desktop-mangomaster
@@ -58,6 +59,8 @@ in
 
   system.nixos.distroName = "Ojuny";
   system.nixos.distroId = "ojuny";
+
+  ojuny.gpu = lib.mkForce "none";
 
   isoImage.edition = "installer";
 
