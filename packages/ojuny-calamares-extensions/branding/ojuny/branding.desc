@@ -26,7 +26,6 @@ strings:
 images:
   productIcon: "ojuny-logo.png"
   productLogo: "ojuny-logo.png"
-  productBanner: "ojuny-brand-large.png"
   productWelcome: "ojuny-brand-large.png"
 
 style:
