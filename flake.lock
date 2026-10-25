@@ -968,11 +968,11 @@
         "stylix": "stylix"
       },
       "locked": {
-        "lastModified": 1792952800,
-        "narHash": "sha256-W6/Xe8EBEepc0l+PU4jTDoYjFFYQCNYF6NITDOA1Xqw=",
+        "lastModified": 1792953319,
+        "narHash": "sha256-Se7kZBvMjkLDq4pBkQSdf/pdi5vQNRqe92CtfEGGRaY=",
         "owner": "SDG-Den",
         "repo": "ojuny-desktop",
-        "rev": "02fdabbe21b6be3cd026652153f8121e9cd3c681",
+        "rev": "e4820581df8e41fa2b2b5ad067a679faa4a84b46",
         "type": "github"
       },
       "original": {
@@ -999,11 +999,11 @@
         "stylix": "stylix_2"
       },
       "locked": {
-        "lastModified": 1792952809,
-        "narHash": "sha256-+v0wzxNij/nGD5/rTgt7yDsl+PlL0UxIgL08V0n3tXM=",
+        "lastModified": 1792954132,
+        "narHash": "sha256-epknRQ9UKJs00amlPVB/I/EJRcSwtUDUeAYpO3wjfZc=",
         "owner": "SDG-Den",
         "repo": "ojuny-template",
-        "rev": "f110e4113d6094cac6da2dce433147c671c1f6c3",
+        "rev": "09acc84ccd74108198d12841a87a9b7c65a5b84b",
         "type": "github"
       },
       "original": {
