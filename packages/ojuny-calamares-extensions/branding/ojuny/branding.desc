@@ -26,7 +26,7 @@ strings:
 images:
   productIcon: "ojuny-logo.png"
   productLogo: "ojuny-logo.png"
-  productWelcome: "ojuny-brand-large.png"
+  productBanner: "ojuny-brand-large.png"
 
 style:
   SidebarBackground: "#2d353b"
