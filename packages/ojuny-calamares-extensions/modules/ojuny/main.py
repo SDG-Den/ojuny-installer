@@ -657,6 +657,23 @@ def hardware_script_args(clone, root, firmware, device, extra_file):
     return args
 
 
+def update_lock(staging, rev):
+    run_command(
+        [
+            cmd("pkexec"),
+            cmd("nix"),
+            "--extra-experimental-features",
+            "nix-command flakes",
+            "flake",
+            "lock",
+            "--override-input",
+            "nixpkgs",
+            "github:nixos/nixpkgs/{}".format(rev),
+            "path:" + staging,
+        ]
+    )
+
+
 def install():
     global_storage = libcalamares.globalstorage
     job_configuration = libcalamares.job.configuration
@@ -688,6 +705,7 @@ def install():
         "nixos-enter",
         "git",
         "env",
+        "nix",
     ]
     missing = [name for name in required if shutil.which(name) is None]
     if missing:
@@ -705,6 +723,8 @@ def install():
     mkpasswd_path = job_configuration.get("mkpasswd") or cmd("mkpasswd")
     if not os.path.exists(mkpasswd_path):
         raise RuntimeError("mkpasswd not found in the live environment")
+
+    nixpkgs_rev = (job_configuration.get("nixpkgsRev") or "").strip()
 
     username = global_storage.value("username") or "user"
     fullname = global_storage.value("fullname") or username
@@ -864,6 +884,14 @@ def install():
 
     if extra_file:
         os.unlink(extra_file)
+
+    if mode != "prepared" and nixpkgs_rev:
+        try:
+            update_lock(staging, nixpkgs_rev)
+        except Exception as error:
+            libcalamares.utils.warning(
+                "could not align the target nixpkgs: {error}".format(error=error)
+            )
 
     libcalamares.job.setprogress(0.32)
     run_command([cmd("pkexec"), cmd("chmod"), "755", root])

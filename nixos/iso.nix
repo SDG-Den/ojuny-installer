@@ -13,6 +13,7 @@ let
     regenerateHardware =
       (inputs.ojuny-template.packages.${pkgs.system} or { }).regenerate-hardware or null;
     mkpasswd = pkgs.mkpasswd;
+    nixpkgsRev = inputs.nixpkgs.rev or "";
   };
 
   calamares = pkgs.callPackage ../packages/calamares-ojuny.nix {
@@ -127,6 +128,15 @@ in
       categories = [ "System" ];
       terminal = false;
     })
+    inputs.ojuny-template.packages.${pkgs.system}.nix-settings-gui
+    inputs.ojuny-template.packages.${pkgs.system}.nix-regedit
+    inputs.ojuny-template.packages.${pkgs.system}.nix-shell-gui
+    inputs.ojuny-template.packages.${pkgs.system}.simple-nix-update-gui
+    inputs.ojuny-template.packages.${pkgs.system}.simple-nix-update-gui-daemon
+    inputs.ojuny-template.packages.${pkgs.system}.ojuny-cli
+    inputs.ojuny-template.packages.${pkgs.system}.ojuny-patches-cli
+    inputs.ojuny-template.packages.${pkgs.system}.mango
+    inputs.ojuny-template.packages.${pkgs.system}.dms
     pkgs.cryptsetup
     pkgs.glibcLocales
     pkgs.mkpasswd

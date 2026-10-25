@@ -6,6 +6,7 @@
   prepareRepo ? null,
   regenerateHardware ? null,
   mkpasswd ? null,
+  nixpkgsRev ? "",
 }:
 
 stdenvNoCC.mkDerivation {
@@ -44,7 +45,8 @@ stdenvNoCC.mkDerivation {
       --replace-fail '@regenerateHardware@' "${
         if regenerateHardware == null then "" else lib.getExe' regenerateHardware "regenerate-hardware"
       }" \
-      --replace-fail '@mkpasswd@' "${if mkpasswd == null then "" else lib.getExe mkpasswd}"
+      --replace-fail '@mkpasswd@' "${if mkpasswd == null then "" else lib.getExe mkpasswd}" \
+      --replace-fail '@nixpkgsRev@' "${nixpkgsRev}"
 
     runHook postInstall
   '';
