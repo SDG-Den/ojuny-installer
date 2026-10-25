@@ -217,14 +217,28 @@ def user_module(username, fullname, hashed_password, shell, version):
     }};
 
     config = {{
+      /* @option widget = "submodule"; label = "Account"; group = "Account"; */
       users.users.{username} = {{
+        /* @option widget = "text"; hidden = true; */
         isNormalUser = true;
         uid = 1000;
+
+        /* @option widget = "text"; label = "Description"; group = "Account"; */
         description = {fullname};
+
+        /* @option widget = "list"; label = "Extra groups"; group = "Account"; */
         extraGroups = [ "networkmanager" "wheel" "video" "input" ];
+
+        /* @option widget = "text"; label = "Hashed password"; group = "Account"; advanced = true; description = "A \\"!\\" keeps the account locked until a password is set."; */
         hashedPassword = {hashed_password};
+
+        /* @option widget = "list"; label = "SSH keys"; group = "Account"; */
         openssh.authorizedKeys.keys = [ ];
+
+        /* @option widget = "dropdown"; label = "Shell"; group = "Account"; choices = [ "zsh" "bash" "fish" ]; */
         ojunyShell = "{shell}";
+
+        /* @option widget = "text"; label = "Shell"; group = "Account"; hidden = true; */
         shell = pkgs.${{config.users.users.{username}.ojunyShell}};
       }};
 
