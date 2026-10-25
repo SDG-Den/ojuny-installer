@@ -999,11 +999,11 @@
         "stylix": "stylix_2"
       },
       "locked": {
-        "lastModified": 1792922178,
-        "narHash": "sha256-mkq/fktxAF9ia8TdyZh1nimL0UqZ5T20W+w3GlRBxiU=",
+        "lastModified": 1792934936,
+        "narHash": "sha256-Id4p/dgvultny41ncXOjHPOgSGSsu+mPnuI5tDad3SI=",
         "owner": "SDG-Den",
         "repo": "ojuny-template",
-        "rev": "fc295ef511159ea0ea402fb6690837894de57dda",
+        "rev": "d50c0dbf912ad67ef27cdcf7bf9f27d8ae715b5e",
         "type": "github"
       },
       "original": {

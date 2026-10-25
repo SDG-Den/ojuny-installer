@@ -657,6 +657,144 @@ def hardware_script_args(clone, root, firmware, device, extra_file):
     return args
 
 
+_ACT_COPY_PATH = 100
+_ACT_COPY_PATHS = 103
+_ACT_BUILDS = 104
+_RES_PROGRESS = 105
+
+
+class NixProgress:
+    """Parse nix internal-json output and track build/copy progress."""
+
+    def __init__(self):
+        self._builds_done = 0
+        self._builds_expected = 0
+        self._copies_done = 0
+        self._copies_expected = 0
+        self._per_act_progress = {}
+        self._copy_bytes = {}
+        self._activities = {}
+        self.fraction = 0.0
+        self._floor = 0.0
+        self._floor_done = 0
+        self.log_messages = []
+
+    def handle(self, line):
+        line = line.strip()
+        if not line:
+            return True
+        if not line.startswith("@nix "):
+            return False
+        try:
+            msg = json.loads(line[5:])
+        except (json.JSONDecodeError, ValueError):
+            return False
+
+        action = msg.get("action")
+        if action == "start":
+            self._on_start(msg)
+        elif action == "stop":
+            self._on_stop(msg)
+        elif action == "result":
+            self._on_result(msg)
+        elif action == "msg":
+            level = msg.get("level", 0)
+            text = msg.get("msg", "")
+            if level <= 1 and text:
+                self.log_messages.append(text)
+
+        self._update()
+        return True
+
+    def _on_start(self, msg):
+        act_id = msg["id"]
+        act_type = msg.get("type", 0)
+        self._activities[act_id] = act_type
+        text = msg.get("text", "")
+        if text and msg.get("level", 5) <= 3:
+            self.log_messages.append(text)
+
+    def _on_stop(self, msg):
+        act_id = msg["id"]
+        self._activities.pop(act_id, None)
+        self._copy_bytes.pop(act_id, None)
+
+    def _on_result(self, msg):
+        act_id = msg["id"]
+        res_type = msg.get("type", 0)
+        fields = msg.get("fields", [])
+        act_type = self._activities.get(act_id, 0)
+
+        if res_type != _RES_PROGRESS or len(fields) < 2:
+            return
+        if act_type == _ACT_BUILDS:
+            self._per_act_progress[(act_type, act_id)] = (
+                "builds",
+                fields[0],
+                fields[1],
+            )
+            self._recompute_counts()
+        elif act_type == _ACT_COPY_PATHS:
+            self._per_act_progress[(act_type, act_id)] = (
+                "copies",
+                fields[0],
+                fields[1],
+            )
+            self._recompute_counts()
+        elif act_type == _ACT_COPY_PATH:
+            self._copy_bytes[act_id] = (fields[0], max(fields[1], 1))
+
+    def _update(self):
+        count_total = self._builds_expected + self._copies_expected
+        count_done = self._builds_done + self._copies_done
+        if count_total <= 0:
+            return
+
+        effective_total = max(count_total, 3)
+        count_frac = count_done / effective_total
+
+        total_bytes = sum(t for _, t in self._copy_bytes.values())
+        done_bytes = sum(d for d, _ in self._copy_bytes.values())
+        if total_bytes > 0:
+            byte_sub = done_bytes / total_bytes
+            step = len(self._copy_bytes) / effective_total
+            raw = count_frac + byte_sub * step
+        else:
+            raw = count_frac
+        raw = max(0.0, min(1.0, raw))
+
+        if raw >= self._floor:
+            self._floor = raw
+            self._floor_done = count_done
+        else:
+            new_items = count_done - self._floor_done
+            remaining = effective_total - self._floor_done
+            if remaining > 0 and new_items >= 0:
+                raw = self._floor + (new_items / remaining) * (1.0 - self._floor)
+            else:
+                raw = self._floor
+            raw = max(0.0, min(1.0, raw))
+            if raw > self._floor:
+                self._floor = raw
+                self._floor_done = count_done
+
+        self.fraction = raw
+
+    def _recompute_counts(self):
+        bd = be = cd = ce = 0
+        for kind, done, expected in self._per_act_progress.values():
+            if kind == "builds":
+                bd += done
+                be += expected
+            else:
+                cd += done
+                ce += expected
+        self._builds_done = bd
+        self._builds_expected = be
+        self._copies_done = cd
+        self._copies_expected = ce
+
+
 def install():
     global_storage = libcalamares.globalstorage
     job_configuration = libcalamares.job.configuration
@@ -755,12 +893,15 @@ def install():
     partitions = global_storage.value("partitions") or []
 
     libcalamares.job.setprogress(0.02)
+    libcalamares.utils.debug("Ojuny: preparing boot configuration")
     extra_lines = extra_boot_lines(root, partitions, firmware)
     extra_file = write_extra_file(extra_lines) if extra_lines else None
+    libcalamares.utils.debug("Ojuny: creating target home")
     run_command([cmd("pkexec"), cmd("install"), "-d", "-m", "0755", home])
     if os.path.exists(clone):
         run_command([cmd("pkexec"), cmd("rm"), "-rf", clone])
 
+    libcalamares.utils.debug("Ojuny: preparing template and hardware")
     if mode == "prepared":
         if not template_url:
             raise RuntimeError("a prepared template repository URL is required")
@@ -866,10 +1007,13 @@ def install():
         os.unlink(extra_file)
 
     libcalamares.job.setprogress(0.32)
+    libcalamares.utils.debug("Ojuny: starting nixos-install")
     run_command([cmd("pkexec"), cmd("chmod"), "755", root])
     command = [cmd("pkexec")] + proxy_env() + [
         cmd("nixos-install"),
         "--no-root-passwd",
+        "--log-format",
+        "internal-json",
         "--root",
         root,
         "--flake",
@@ -887,18 +1031,35 @@ def install():
         bufsize=1,
     )
 
+    progress = NixProgress()
     output = []
-    line_count = 0
     for line in process.stdout:
-        output.append(line.rstrip())
+        was_json = progress.handle(line)
+        if not was_json:
+            text = line.strip()
+            if text:
+                output.append(text)
+                libcalamares.utils.debug("nixos-install: {}".format(text))
+
+        for log_line in progress.log_messages:
+            output.append(log_line)
+            libcalamares.utils.debug("nixos-install: {}".format(log_line))
+        progress.log_messages.clear()
+
         if len(output) > 400:
-            output.pop(0)
-        line_count += 1
-        libcalamares.job.setprogress(min(0.94, 0.32 + line_count * 0.0005))
+            del output[:-400]
+
+        libcalamares.job.setprogress(
+            min(0.98, 0.32 + progress.fraction * (0.98 - 0.32))
+        )
 
     if process.wait() != 0:
         raise RuntimeError("nixos-install failed:\n{}".format("\n".join(output)))
 
+    libcalamares.utils.debug("Ojuny: nixos-install finished")
+
+    libcalamares.job.setprogress(0.98)
+    libcalamares.utils.debug("Ojuny: copying generated configuration")
     repos_dir = os.path.dirname(clone)
     run_command([cmd("pkexec"), cmd("rm"), "-rf", clone])
     run_command([cmd("pkexec"), cmd("install"), "-d", "-m", "0755", repos_dir])
@@ -906,7 +1067,8 @@ def install():
     run_command([cmd("pkexec"), cmd("cp"), "-a", staging + "/.", clone])
     run_command([cmd("pkexec"), cmd("rm"), "-rf", staging])
 
-    libcalamares.job.setprogress(0.96)
+    libcalamares.job.setprogress(0.99)
+    libcalamares.utils.debug("Ojuny: setting up git")
 
     credential_path = os.path.join(root, "home", username, ".git-credentials")
     try:
@@ -937,6 +1099,7 @@ def install():
         run_command([cmd("pkexec"), cmd("chmod"), "600", credential_path])
 
     libcalamares.job.setprogress(1.0)
+    libcalamares.utils.debug("Ojuny: installation finished")
     return None
 
 
