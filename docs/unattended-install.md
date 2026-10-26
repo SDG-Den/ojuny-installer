@@ -40,10 +40,10 @@ fork has not been prepared yet.
 2. The service waits for the target disk, checks that it is not mounted, and
    optionally counts down before wiping it.
 3. `disko` creates a GPT layout with a BIOS boot partition, an ESP, an ext4
-   root, and an optional swap partition.
+   root or a LUKS2-encrypted ext4 root, and an optional swap partition.
 4. The flake snapshot is copied to `/mnt/home/<user>/repos/nix-flake`.
-5. `regenerate-hardware` writes `modules/07-system/00-hardware.nix` for the
-   target disk and bootloader.
+5. `regenerate-hardware` writes `modules/07-system/00-hardware.nix` and
+   `modules/07-system/facter.json` for the target disk and bootloader.
 6. The copy is initialized as a git repository and committed.
 7. `nixos-install --flake /mnt/home/<user>/repos/nix-flake#<host>` installs the
    system.
@@ -105,7 +105,8 @@ to `/dev/vda`.
 - `x86_64-linux` only.
 - UEFI and BIOS are supported by separate builds. The firmware setting is fixed
   at ISO build time.
-- No LUKS in version 1.
+- LUKS2 root encryption is optional through `--encrypt`; the passphrase is
+  stored on the live ISO with mode `0600`.
 - The ISO installs the flake snapshot it was built from.
 - Wi-Fi is not configured by the unattended service. Use a wired connection.
 - The installed flake is modified before install. It is the configuration that

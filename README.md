@@ -4,13 +4,14 @@ Calamares live ISO and unattended installer ISO for
 [ojuny-template](https://github.com/SDG-Den/ojuny-template).
 
 The Calamares ISO boots the Ojuny desktop from `ojuny-desktop`, runs a rebranded
-Calamares, partitions and mounts the target, copies the pinned template to
+Calamares, partitions and mounts the target with optional LUKS2 root encryption, copies the pinned template to
 `/home/<user>/repos/nix-flake`, generates the hardware, user and host modules,
 and finishes with `nixos-install --flake`.
 
-The unattended ISO boots a minimal console, partitions the target with disko,
-copies the template fork to `/home/<user>/repos/nix-flake`, regenerates its
-hardware module, and runs `nixos-install --flake` without user interaction.
+The unattended ISO boots a minimal console, partitions the target with disko
+(optionally wrapping the root in LUKS2), copies the template fork to
+`/home/<user>/repos/nix-flake`, regenerates its hardware module and
+`facter.json`, and runs `nixos-install --flake` without user interaction.
 The modified flake is left in the installed system.
 
 ## Requirements
