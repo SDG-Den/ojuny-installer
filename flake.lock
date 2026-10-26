@@ -309,7 +309,7 @@
     },
     "firefox-addons": {
       "inputs": {
-        "nixpkgs": "nixpkgs_2"
+        "nixpkgs": "nixpkgs"
       },
       "locked": {
         "dir": "pkgs/firefox-addons",
@@ -859,16 +859,16 @@
     },
     "nixpkgs": {
       "locked": {
-        "lastModified": 1792502884,
-        "narHash": "sha256-IoNisKcGbUjdd45qCqywGMCYmZ5EnkxezvLII0FWwNA=",
+        "lastModified": 1744536153,
+        "narHash": "sha256-awS2zRgF4uTwrOKwwiJcByDzDOdo3Q1rPZbiHQg/N38=",
         "owner": "nixos",
         "repo": "nixpkgs",
-        "rev": "02c087f3fe673c9e317f206a627cb6b910336dbe",
+        "rev": "18dd725c29603f582cf1900e0d25f9f1063dbf11",
         "type": "github"
       },
       "original": {
         "owner": "nixos",
-        "ref": "nixos-unstable",
+        "ref": "nixpkgs-unstable",
         "repo": "nixpkgs",
         "type": "github"
       }
@@ -904,22 +904,6 @@
       }
     },
     "nixpkgs_2": {
-      "locked": {
-        "lastModified": 1744536153,
-        "narHash": "sha256-awS2zRgF4uTwrOKwwiJcByDzDOdo3Q1rPZbiHQg/N38=",
-        "owner": "nixos",
-        "repo": "nixpkgs",
-        "rev": "18dd725c29603f582cf1900e0d25f9f1063dbf11",
-        "type": "github"
-      },
-      "original": {
-        "owner": "nixos",
-        "ref": "nixpkgs-unstable",
-        "repo": "nixpkgs",
-        "type": "github"
-      }
-    },
-    "nixpkgs_3": {
       "locked": {
         "lastModified": 1791956154,
         "narHash": "sha256-jBYGPi4udQ9uo4KQp9m2J0546nJVQitG15gvZSaVVAs=",
@@ -1053,18 +1037,18 @@
         "nix-settings-gui": "nix-settings-gui",
         "nix-shell-gui": "nix-shell-gui",
         "nixos-hardware": "nixos-hardware",
-        "nixpkgs": "nixpkgs_3",
+        "nixpkgs": "nixpkgs_2",
         "ojuny-cli": "ojuny-cli",
         "ojuny-desktop": "ojuny-desktop",
         "simple-nix-update-gui": "simple-nix-update-gui",
         "stylix": "stylix_2"
       },
       "locked": {
-        "lastModified": 1793046579,
-        "narHash": "sha256-7v8DKkp3h+1La+NjyDV3AxdN7Ju0D0bGz2uaQ51xDcA=",
+        "lastModified": 1793051841,
+        "narHash": "sha256-8v58Nzw+3TzHmMCb1oXXu0FzDOJp8sFWggJGoWEdzw8=",
         "owner": "SDG-Den",
         "repo": "ojuny-template",
-        "rev": "78551abf17a96a1f14dbf55dd07a53a35c284cf7",
+        "rev": "6334d9a1705573d7f355d0d8a0d20df4ed879654",
         "type": "github"
       },
       "original": {
@@ -1077,7 +1061,10 @@
       "inputs": {
         "disko": "disko",
         "flake-parts": "flake-parts",
-        "nixpkgs": "nixpkgs",
+        "nixpkgs": [
+          "ojuny-template",
+          "nixpkgs"
+        ],
         "ojuny-template": "ojuny-template",
         "settings": "settings"
       }

@@ -2,7 +2,7 @@
   description = "Ojuny installer - Calamares live ISO and unattended installer ISO";
 
   inputs = {
-    nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable";
+    nixpkgs.follows = "ojuny-template/nixpkgs";
 
     flake-parts = {
       url = "github:hercules-ci/flake-parts";
