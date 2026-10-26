@@ -139,9 +139,11 @@ in
     inputs.ojuny-template.packages.${pkgs.system}.ojuny-patches-cli
     inputs.ojuny-template.packages.${pkgs.system}.mango
     inputs.ojuny-template.packages.${pkgs.system}.dms
+    inputs.ojuny-template.packages.${pkgs.system}.dms-greeter
     pkgs.cryptsetup
     pkgs.glibcLocales
     pkgs.mkpasswd
+    pkgs.nixos-facter
     pkgs.zsh
   ];
 

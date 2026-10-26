@@ -176,6 +176,7 @@ def hardware_module(hardware, firmware_type, device, extra_lines):
 
   flake.modules.nixos.system-hardware =
 {hardware}
+    hardware.facter.reportPath = ./facter.json;
   ;
 
   flake.modules.nixos.system-bootloader = {{ pkgs, ... }}: {{
@@ -319,7 +320,7 @@ def extra_boot_lines(root, partitions, firmware):
             part.get("claimed") is True
             and part.get("fsName") in ("luks", "luks2")
             and part.get("device") is not None
-            and part.get("fs") == "linuxswap"
+            and part.get("luksMapperName")
         ):
             lines.append(
                 'boot.initrd.luks.devices."{}".device = "/dev/disk/by-uuid/{}";'.format(
@@ -660,6 +661,11 @@ def generate_hardware(root):
     return hardware
 
 
+def generate_facter(staging):
+    report = run_command([cmd("nixos-facter")])
+    write_file(os.path.join(staging, "modules/07-system/facter.json"), report)
+
+
 def hardware_script_args(clone, root, firmware, device, extra_file):
     args = ["--root", clone, "--target-root", root]
     if firmware:
@@ -995,6 +1001,7 @@ def install():
                     os.path.join(staging, "modules/07-system/00-hardware.nix"),
                     hardware_module(hardware, firmware, device, extra_lines),
                 )
+                generate_facter(staging)
         else:
             libcalamares.job.setprogress(0.06)
             run_command([cmd("pkexec"), cmd("cp"), "-a", template_path, staging])
@@ -1016,6 +1023,7 @@ def install():
                 device,
                 extra_lines,
             )
+            generate_facter(staging)
 
     if extra_file:
         os.unlink(extra_file)

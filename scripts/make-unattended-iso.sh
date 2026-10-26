@@ -16,6 +16,8 @@ timezone=""
 locale=""
 keymap=""
 swap_size="0"
+encryption_enable=0
+encryption_passphrase=""
 confirm_seconds="10"
 final_action="reboot"
 clone_relative="repos/nix-flake"
@@ -45,6 +47,9 @@ Options:
   --locale LOCALE       Locale for bundled mode
   --keymap KEYMAP       Console keymap for bundled mode
   --swap-size SIZE      Swap partition size, 0 to disable (default: 0)
+  --encrypt             Enable LUKS2 root encryption
+  --encryption-passphrase PASS
+                        LUKS passphrase (prompted when --encrypt is used)
   --ssh-key KEY         SSH public key, repeatable
   --confirm-seconds N   Countdown before wiping (default: 10)
   --final-action ACTION reboot or poweroff (default: reboot)
@@ -104,6 +109,15 @@ while [ "$#" -gt 0 ]; do
       ;;
     --swap-size)
       swap_size="${2:-}"
+      shift 2
+      ;;
+    --encrypt)
+      encryption_enable=1
+      shift
+      ;;
+    --encryption-passphrase)
+      encryption_enable=1
+      encryption_passphrase="${2:-}"
       shift 2
       ;;
     --ssh-key)
@@ -189,6 +203,16 @@ case "$disk" in
     ;;
 esac
 
+if [ "$encryption_enable" -eq 1 ] && [ -z "$encryption_passphrase" ]; then
+  read -r -s -p "LUKS passphrase: " encryption_passphrase
+  echo
+fi
+
+if [ "$encryption_enable" -eq 1 ] && [ -z "$encryption_passphrase" ]; then
+  echo "make-unattended-iso: encryption passphrase must not be empty" >&2
+  exit 2
+fi
+
 if [ ! -b "$disk" ]; then
   echo "make-unattended-iso: warning: $disk is not attached to this machine" >&2
 fi
@@ -261,6 +285,8 @@ export OJUNY_TIMEZONE="$timezone"
 export OJUNY_LOCALE="$locale"
 export OJUNY_KEYMAP="$keymap"
 export OJUNY_SWAP_SIZE="$swap_size"
+export OJUNY_ENCRYPTION_ENABLE="$encryption_enable"
+export OJUNY_ENCRYPTION_PASSPHRASE="$encryption_passphrase"
 export OJUNY_CONFIRM_SECONDS="$confirm_seconds"
 export OJUNY_FINAL_ACTION="$final_action"
 export OJUNY_CLONE_RELATIVE="$clone_relative"
@@ -297,6 +323,10 @@ settings = {
     "locale": optional("OJUNY_LOCALE"),
     "keymap": optional("OJUNY_KEYMAP"),
     "swapSize": os.environ["OJUNY_SWAP_SIZE"],
+    "encryption": {
+        "enable": os.environ["OJUNY_ENCRYPTION_ENABLE"] == "1",
+        "passphrase": optional("OJUNY_ENCRYPTION_PASSPHRASE"),
+    },
     "cloneRelative": os.environ["OJUNY_CLONE_RELATIVE"],
     "stateVersion": os.environ["OJUNY_STATE_VERSION"],
     "confirmSeconds": int(os.environ["OJUNY_CONFIRM_SECONDS"]),

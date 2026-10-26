@@ -15,6 +15,28 @@ let
   regenerateHardware = inputs.ojuny-template.packages.${system}.regenerate-hardware;
   prepareRepo = inputs.ojuny-template.packages.${system}.prepare-repo;
 
+  encryptionEnabled = (settings.encryption or { }).enable or false;
+
+  rootContent =
+    if encryptionEnabled then
+      {
+        type = "luks";
+        name = "cryptroot";
+        settings.allowDiscards = true;
+        passwordFile = "/etc/ojuny/luks.key";
+        content = {
+          type = "filesystem";
+          format = "ext4";
+          mountpoint = "/";
+        };
+      }
+    else
+      {
+        type = "filesystem";
+        format = "ext4";
+        mountpoint = "/";
+      };
+
   swapPartition = lib.optionalAttrs (settings.swapSize != null && settings.swapSize != "0") {
     swap = {
       size = settings.swapSize;
@@ -51,11 +73,7 @@ let
           root = {
             size = "100%";
             priority = 4;
-            content = {
-              type = "filesystem";
-              format = "ext4";
-              mountpoint = "/";
-            };
+            content = rootContent;
           };
         }
         // swapPartition;
@@ -86,18 +104,24 @@ in
     mode = "0600";
     text = builtins.toJSON settings;
   };
+  environment.etc."ojuny/luks.key" = lib.mkIf encryptionEnabled {
+    mode = "0600";
+    text = settings.encryption.passphrase;
+  };
   environment.etc."ojuny/install.py".source = ./unattended-install.py;
 
   environment.systemPackages = [
     disko
     prepareRepo
     regenerateHardware
+    pkgs.cryptsetup
     pkgs.curl
     pkgs.dosfstools
     pkgs.e2fsprogs
     pkgs.git
     pkgs.gptfdisk
     pkgs.jq
+    pkgs.nixos-facter
     pkgs.nix
     pkgs.nixos-install-tools
     pkgs.parted
@@ -118,12 +142,14 @@ in
       disko
       prepareRepo
       regenerateHardware
+      pkgs.cryptsetup
       pkgs.curl
       pkgs.dosfstools
       pkgs.e2fsprogs
       pkgs.git
       pkgs.gptfdisk
       pkgs.jq
+      pkgs.nixos-facter
       pkgs.nix
       pkgs.nixos-install-tools
       pkgs.parted
@@ -167,6 +193,10 @@ in
         "poweroff"
       ];
       message = "unattended.finalAction must be reboot or poweroff";
+    }
+    {
+      assertion = !encryptionEnabled || (settings.encryption.passphrase or null) != null;
+      message = "unattended.encryption.passphrase is required when encryption is enabled";
     }
   ];
 }

@@ -397,6 +397,17 @@ def install():
     confirm(disk, settings.get("confirmSeconds", 10))
     wait_for_network()
 
+    run(
+        [
+            "disko",
+            "--mode",
+            "destroy,format,mount",
+            "--root-mountpoint",
+            MOUNT,
+            DISKO_CONFIG,
+        ]
+    )
+
     source_user = detect_username(FLAKE_SOURCE)
 
     if mode == "prepared":
