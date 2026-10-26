@@ -15,7 +15,14 @@ let
     mkpasswd = pkgs.mkpasswd;
   };
 
+  calamaresPkg = pkgs.calamares.overrideAttrs (previous: {
+    patches = lib.filter (patch: !(lib.hasInfix "dont-allow-manual-luks" (toString patch))) (
+      previous.patches or [ ]
+    );
+  });
+
   calamares = pkgs.callPackage ../packages/calamares-ojuny.nix {
+    calamares = calamaresPkg;
     inherit extensions;
   };
 in
@@ -54,6 +61,10 @@ in
           mkdir -p $man
         '';
       });
+
+      tesseract = prev.tesseract.override {
+        enableLanguages = [ "eng" ];
+      };
     })
   ];
 
@@ -110,6 +121,8 @@ in
     enable = true;
     user = "nixos";
   };
+
+  services.speechd.enable = lib.mkForce false;
 
   nix.settings.experimental-features = [
     "nix-command"

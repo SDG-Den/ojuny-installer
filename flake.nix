@@ -59,7 +59,14 @@
             mkpasswd = pkgs.mkpasswd;
           };
 
+          calamares = pkgs.calamares.overrideAttrs (previous: {
+            patches = lib.filter (patch: !(lib.hasInfix "dont-allow-manual-luks" (toString patch))) (
+              previous.patches or [ ]
+            );
+          });
+
           calamares-ojuny = pkgs.callPackage ./packages/calamares-ojuny.nix {
+            inherit calamares;
             extensions = ojuny-calamares-extensions;
           };
         in
