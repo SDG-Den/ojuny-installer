@@ -615,11 +615,11 @@
         "tinted-theming": "tinted-theming"
       },
       "locked": {
-        "lastModified": 1793064196,
-        "narHash": "sha256-5lJN8fY2NK23pMf2zQAv4bXkQg/WFtfO0oLrLVubXkE=",
+        "lastModified": 1793108814,
+        "narHash": "sha256-BA0n065e/fMD/0Hw3yz5uJp1LudbMlBHk8WOlPpjDb4=",
         "owner": "SDG-Den",
         "repo": "nix-settings-gui",
-        "rev": "67eb9f5d1865aacfd28bdc0e3135104bc3ecc354",
+        "rev": "b610ec1678b27e71fa0350c6ba656e715b03b85a",
         "type": "github"
       },
       "original": {
@@ -805,11 +805,11 @@
         ]
       },
       "locked": {
-        "lastModified": 1793010577,
-        "narHash": "sha256-wXZYEtupsbyWga3nkXp5sIuoJ67Z1Mz8lrP1ke1/y0Y=",
+        "lastModified": 1793108816,
+        "narHash": "sha256-HQUz1ixtGXBVF39/5U9lV6acyYOwAzhIo4LR11zXRQM=",
         "owner": "SDG-Den",
         "repo": "ojuny-desktop",
-        "rev": "436178da5411d1298306eb11fdf6d600d1666e39",
+        "rev": "f490425505e25004bc31e45afd75ebfdc4557f96",
         "type": "github"
       },
       "original": {
@@ -838,11 +838,11 @@
         "stylix": "stylix"
       },
       "locked": {
-        "lastModified": 1793105014,
-        "narHash": "sha256-bpAjt0w+oNZ19uszKjj4dB1vRs5p2hBFP+5DwqSzv1s=",
+        "lastModified": 1793108825,
+        "narHash": "sha256-sL5aLbsHdJ0DPrTNGE2NCfbdwuHFPVaqlRUuepmHqR4=",
         "owner": "SDG-Den",
         "repo": "ojuny-template",
-        "rev": "ad2aa74eda54d16478e2c9d6d27347483224a4f6",
+        "rev": "a6ba45263bea37ffca501cd96b74e7bbf08abb08",
         "type": "github"
       },
       "original": {
