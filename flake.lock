@@ -838,11 +838,11 @@
         "stylix": "stylix"
       },
       "locked": {
-        "lastModified": 1793095076,
-        "narHash": "sha256-JJ1NgcX2IERq38dBRYN5zrbDMvtCiY661jY8x3aZ9QU=",
+        "lastModified": 1793105014,
+        "narHash": "sha256-bpAjt0w+oNZ19uszKjj4dB1vRs5p2hBFP+5DwqSzv1s=",
         "owner": "SDG-Den",
         "repo": "ojuny-template",
-        "rev": "8a4d99caf6393fcd997b1b5d0eda79950ecad11b",
+        "rev": "ad2aa74eda54d16478e2c9d6d27347483224a4f6",
         "type": "github"
       },
       "original": {

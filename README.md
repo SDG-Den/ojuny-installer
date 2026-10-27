@@ -81,12 +81,25 @@ qemu-system-x86_64 \
 The VM needs accelerated virtio graphics (`virtio-vga-gl` with `gl=on`).
 Plain VGA, QXL and 2D `virtio-vga` render the Wayland session incorrectly.
 
+The ISO has been confirmed to boot with 4 GB RAM and 2 threads. Install time on
+that configuration has not been measured yet.
+
 The installer needs network access because `nixos-install` fetches the
 template's flake inputs.
 
 The Calamares ISO includes the compiled Ojuny GUI packages from the template's
 locked nixpkgs. The installed system uses the same template lock, so those store
 paths are reused. A prepared repository keeps its own lock and may rebuild them.
+
+## Timings
+
+- Calamares ISO install with LUKS2 root and XFS on a Ryzen 3 3200U with 24 GB
+  RAM and a 256 GB NVMe SSD (generic SSD with a DRAM cache): 18 minutes.
+- Full clean ISO build: 51 minutes.
+- ISO rebuild with reused dependencies, rebuilding only the squashfs: 15
+  minutes.
+
+Most of the build time is spent pre-building the six compiled applications.
 
 ## Installed system
 
