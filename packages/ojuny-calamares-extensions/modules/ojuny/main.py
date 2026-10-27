@@ -314,18 +314,36 @@ def extra_boot_lines(root, partitions, firmware):
     if read_kernel_latest():
         lines.append("boot.kernelPackages = pkgs.linuxPackages_latest;")
 
+    luks_device_lines = []
     for part in partitions:
         if (
             part.get("claimed") is True
             and part.get("fsName") in ("luks", "luks2")
             and part.get("device") is not None
             and part.get("luksMapperName")
+            and part.get("uuid")
         ):
-            lines.append(
+            luks_device_lines.append(
                 'boot.initrd.luks.devices."{}".device = "/dev/disk/by-uuid/{}";'.format(
                     part.get("luksMapperName"), part.get("uuid")
                 )
             )
+
+    for part in partitions:
+        if (
+            part.get("fs") not in ("linuxswap", "swap")
+            or part.get("device") is None
+            or not part.get("luksMapperName")
+            or not part.get("uuid")
+        ):
+            continue
+        line = 'boot.initrd.luks.devices."{}".device = "/dev/disk/by-uuid/{}";'.format(
+            part.get("luksMapperName"), part.get("uuid")
+        )
+        if line not in luks_device_lines:
+            luks_device_lines.append(line)
+
+    lines += luks_device_lines
 
     root_is_encrypted = any(
         part.get("mountPoint") == "/" and part.get("fsName") in ("luks", "luks2")
@@ -362,9 +380,12 @@ def extra_boot_lines(root, partitions, firmware):
 
         for part in partitions:
             if (
-                part.get("claimed") is True
-                and part.get("fsName") in ("luks", "luks2")
+                part.get("luksMapperName")
                 and part.get("device") is not None
+                and (
+                    part.get("claimed") is True
+                    or part.get("fs") in ("linuxswap", "swap")
+                )
             ):
                 mapper = part.get("luksMapperName")
                 lines.append(
