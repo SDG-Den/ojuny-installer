@@ -152,7 +152,7 @@ in
     inputs.ojuny-template.packages.${pkgs.system}.ojuny-cli
     inputs.ojuny-template.packages.${pkgs.system}.ojuny-patches-cli
     inputs.ojuny-template.packages.${pkgs.system}.mango
-    inputs.ojuny-template.packages.${pkgs.system}.dms
+    inputs.ojuny-template.packages.${pkgs.system}.dux
     inputs.ojuny-template.packages.${pkgs.system}.dms-greeter
     pkgs.cryptsetup
     pkgs.glibcLocales
