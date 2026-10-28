@@ -15,7 +15,7 @@
     inputs.ojuny-template.modules.nixos.system-ojuny-cli
 
     inputs.ojuny-template.modules.nixos.users-commonsettings
-    inputs.ojuny-template.modules.nixos.users-user
+    inputs.ojuny-template.modules.nixos.users
 
     inputs.ojuny-template.modules.nixos.desktop-mango
     inputs.ojuny-template.modules.nixos.desktop-mangosettings
