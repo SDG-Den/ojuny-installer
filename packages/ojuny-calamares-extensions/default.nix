@@ -6,6 +6,7 @@
   prepareRepo ? null,
   regenerateHardware ? null,
   mkpasswd ? null,
+  offline ? false,
 }:
 
 stdenvNoCC.mkDerivation {
@@ -30,6 +31,9 @@ stdenvNoCC.mkDerivation {
     cp config/modules/origin.conf $out/etc/calamares/modules/origin.conf
     cp config/modules/users.conf $out/etc/calamares/modules/users.conf
     cp config/modules/welcome.conf $out/etc/calamares/modules/welcome.conf
+    ${lib.optionalString offline ''
+      sed -i '/^    - internet$/d' $out/etc/calamares/modules/welcome.conf
+    ''}
     cp config/modules/partition.conf $out/etc/calamares/modules/partition.conf
     cp -r branding/ojuny $out/share/calamares/branding/ojuny
     mkdir -p $out/lib/calamares/modules/ojuny

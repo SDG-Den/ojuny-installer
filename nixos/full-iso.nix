@@ -15,6 +15,7 @@ let
     regenerateHardware =
       (inputs.ojuny-template.packages.${pkgs.system} or { }).regenerate-hardware or null;
     mkpasswd = pkgs.mkpasswd;
+    offline = true;
   };
 
   calamaresPkg = pkgs.calamares.overrideAttrs (previous: {
