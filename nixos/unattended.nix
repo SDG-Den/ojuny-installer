@@ -85,6 +85,7 @@ in
   imports = [
     (modulesPath + "/installer/cd-dvd/installation-cd-minimal.nix")
     (modulesPath + "/profiles/qemu-guest.nix")
+    ./live-media-eject.nix
   ];
 
   system.nixos.distroName = "Ojuny";

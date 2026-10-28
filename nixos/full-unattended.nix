@@ -89,6 +89,7 @@ in
     (modulesPath + "/profiles/qemu-guest.nix")
     ./full-system.nix
     ./offline.nix
+    ./live-media-eject.nix
   ];
 
   system.nixos.distroName = "Ojuny";

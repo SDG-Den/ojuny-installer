@@ -33,6 +33,7 @@ in
     (modulesPath + "/installer/cd-dvd/installation-cd-graphical-base.nix")
     ./full-system.nix
     ./offline.nix
+    ./live-media-eject.nix
   ];
 
   nixpkgs.overlays = [
