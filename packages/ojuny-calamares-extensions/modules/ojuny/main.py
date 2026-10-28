@@ -207,7 +207,7 @@ def user_module(username, fullname, hashed_password, shell, version):
     imports = [ inputs.home-manager.nixosModules.home-manager ];
 
     config = {{
-      /* @option widget = "users"; label = "Accounts"; */
+      /* @option widget = "users"; label = "Accounts"; homeManager = true; */
       users.users = {{
         {username} = {{
           isNormalUser = true;
@@ -220,7 +220,11 @@ def user_module(username, fullname, hashed_password, shell, version):
         }};
       }};
 
-      home-manager.users.{username}.home.stateVersion = "{version}";
+      home-manager.users = {{
+        {username} = {{
+          home.stateVersion = "{version}";
+        }};
+      }};
     }};
 
   }};
