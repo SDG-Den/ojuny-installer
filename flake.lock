@@ -911,11 +911,11 @@
         "stylix": "stylix"
       },
       "locked": {
-        "lastModified": 1793202680,
-        "narHash": "sha256-rM4XiJGYKMd0QqT7zbw1EjeDYndnA4xiqpLfentraS8=",
+        "lastModified": 1793203177,
+        "narHash": "sha256-88Ps77AvVMgN/xjGFTiYzVW8OWd28T/+6TFndNgZuZw=",
         "owner": "ojuny-project",
         "repo": "ojuny-template",
-        "rev": "a2591dae87ef02a7c59ba9ecedc95db57b827a66",
+        "rev": "941105ee0eca5b1fb0be6b5673ef6dbe6729d991",
         "type": "github"
       },
       "original": {
