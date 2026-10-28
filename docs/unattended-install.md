@@ -1,13 +1,16 @@
 # Unattended install ISO
 
-Build an online installer ISO from your own `ojuny-template` fork. The ISO
-partitions the target disk, copies the flake to
+Build an online or offline installer ISO from your own `ojuny-template` fork.
+The ISO partitions the target disk, copies the flake to
 `/home/<user>/repos/nix-flake`, regenerates the hardware module for that machine,
 runs `nixos-install --flake`, and leaves the modified flake in the installed
 system.
 
-The live environment needs network access. The target system is installed from
-the flake with `nixos-install`, so the flake inputs are fetched online.
+The online live environment needs network access. The target system is
+installed from the flake with `nixos-install`, so the flake inputs are fetched
+online. Pass `--offline` to build the full-system offline ISO instead. That image
+carries the full system runtime closure, and the install service skips the
+network check.
 
 ## Build
 
@@ -23,6 +26,19 @@ settings and the build command without building the ISO.
 
 The ISO is copied to `result-unattended/`. Write it to a USB stick or attach it
 to a virtual machine.
+
+Build the offline variant:
+
+```sh
+nix develop
+scripts/make-unattended-iso.sh --offline \
+  --flake ~/repos/my-template --disk /dev/disk/by-id/...
+```
+
+The offline ISO is larger because it contains the full system. Keep it under
+8,000,000,000 bytes so an 8 GB USB can hold it. The script prints the size and
+warns above 7.4 GB. You can also check a built image with
+`scripts/check-iso-size.sh path/to/image.iso`.
 
 ## Modes
 
@@ -100,7 +116,10 @@ to `/dev/vda`.
 
 ## Limitations
 
-- Online install only.
+- The online ISO needs network access. Use the offline variant for a
+  network-free install.
+- The offline ISO is a full-system image and is significantly larger than the
+  online image.
 - Destructive: the configured disk is wiped without an interactive installer.
 - `x86_64-linux` only.
 - UEFI and BIOS are supported by separate builds. The firmware setting is fixed

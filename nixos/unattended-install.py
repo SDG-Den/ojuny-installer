@@ -15,6 +15,7 @@ FLAKE_SOURCE = "/etc/ojuny/flake"
 DISKO_CONFIG = "/etc/ojuny/disk-config.nix"
 MOUNT = "/mnt"
 MIN_DISK_BYTES = 8 * 1024**3
+OFFLINE = os.path.exists("/etc/ojuny/offline")
 
 
 def log(message):
@@ -395,7 +396,8 @@ def install():
 
     validate_disk(disk)
     confirm(disk, settings.get("confirmSeconds", 10))
-    wait_for_network()
+    if not OFFLINE:
+        wait_for_network()
 
     run(
         [
@@ -466,19 +468,20 @@ def install():
     git_init(target)
 
     log("installing NixOS from {}#{}".format(target, host))
-    run(
-        [
-            "nixos-install",
-            "--no-root-passwd",
-            "--root",
-            MOUNT,
-            "--flake",
-            "{}#{}".format(target, host),
-            "--option",
-            "build-dir",
-            "/nix/var/nix/builds",
-        ]
-    )
+    install_command = [
+        "nixos-install",
+        "--no-root-passwd",
+        "--root",
+        MOUNT,
+        "--flake",
+        "{}#{}".format(target, host),
+        "--option",
+        "build-dir",
+        "/nix/var/nix/builds",
+    ]
+    if OFFLINE:
+        install_command += ["--option", "substituters", ""]
+    run(install_command)
 
     shell = detect_shell(target)
     home = os.path.join(MOUNT, "home", username)

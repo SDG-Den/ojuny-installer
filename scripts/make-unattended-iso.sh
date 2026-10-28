@@ -24,14 +24,16 @@ clone_relative="repos/nix-flake"
 state_version="25.05"
 output_dir="$REPO_ROOT/result-unattended"
 dry_run=0
+offline=0
 ssh_keys=()
 
 usage() {
   cat <<'EOF'
 Usage: make-unattended-iso.sh [options]
 
-Build an online unattended Ojuny ISO from a template fork. The ISO installs the
-flake and leaves the modified copy at /home/<user>/repos/nix-flake.
+Build an unattended Ojuny ISO from a template fork. The ISO installs the flake
+and leaves the modified copy at /home/<user>/repos/nix-flake. Use --offline for
+the full-system offline ISO.
 
 Options:
   --flake PATH          Path to the ojuny-template fork (default: ~/repos/nix-flake)
@@ -56,6 +58,7 @@ Options:
   --clone-relative PATH Path under the home directory (default: repos/nix-flake)
   --state-version VER   stateVersion for bundled mode (default: 25.05)
   --output DIR          Copy the ISO here (default: result-unattended)
+  --offline             Build the full-system offline ISO
   --dry-run             Print the settings and build command
   -h, --help            Show this help
 EOF
@@ -143,6 +146,10 @@ while [ "$#" -gt 0 ]; do
     --output)
       output_dir="${2:-}"
       shift 2
+      ;;
+    --offline)
+      offline=1
+      shift
       ;;
     --dry-run)
       dry_run=1
@@ -346,8 +353,14 @@ cat >"$tmp/flake.nix" <<'EOF'
 }
 EOF
 
+if [ "$offline" -eq 1 ]; then
+  iso_output="unattended-iso-offline"
+else
+  iso_output="unattended-iso"
+fi
+
 build_args=(
-  "path:$REPO_ROOT#unattended-iso"
+  "path:$REPO_ROOT#$iso_output"
   --override-input ojuny-template "path:$flake"
   --override-input settings "path:$tmp"
   --no-write-lock-file
@@ -377,6 +390,12 @@ mkdir -p "$output_dir"
 cp "$iso" "$output_dir/"
 iso_name="$(basename "$iso")"
 
+size="$(stat -c %s "$output_dir/$iso_name")"
+
 echo
 echo "ISO: $output_dir/$iso_name"
+echo "size: $size bytes"
+if [ "$size" -gt 7400000000 ]; then
+  echo "warning: ISO exceeds 7.4 GB; an 8 GB USB may not fit it" >&2
+fi
 sha256sum "$output_dir/$iso_name"

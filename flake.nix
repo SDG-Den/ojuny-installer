@@ -45,6 +45,49 @@
         specialArgs = { inherit inputs settings; };
         modules = [ ./nixos/unattended.nix ];
       };
+
+      fullTarget = lib.nixosSystem {
+        inherit system;
+        specialArgs = { inherit inputs; };
+        modules = [
+          ./nixos/full-system.nix
+          ./nixos/full-hardware.nix
+          ./nixos/target-bootloader.nix
+        ];
+      };
+
+      fullTargetLatest = lib.nixosSystem {
+        inherit system;
+        specialArgs = { inherit inputs; };
+        modules = [
+          ./nixos/full-system.nix
+          ./nixos/full-hardware.nix
+          ./nixos/target-bootloader.nix
+          ({ lib, pkgs, ... }: {
+            boot.kernelPackages = lib.mkForce pkgs.linuxPackages_latest;
+          })
+        ];
+      };
+
+      fullIso = lib.nixosSystem {
+        inherit system;
+        specialArgs = {
+          inherit inputs;
+          target = fullTarget;
+          targetLatest = fullTargetLatest;
+        };
+        modules = [ ./nixos/full-iso.nix ];
+      };
+
+      fullUnattended = lib.nixosSystem {
+        inherit system;
+        specialArgs = {
+          inherit inputs settings;
+          target = fullTarget;
+          targetLatest = fullTargetLatest;
+        };
+        modules = [ ./nixos/full-unattended.nix ];
+      };
     in
     flake-parts.lib.mkFlake { inherit inputs; } {
       systems = [ system ];
@@ -78,6 +121,8 @@
 
             ojuny-iso = iso.config.system.build.isoImage;
             unattended-iso = unattended.config.system.build.isoImage;
+            ojuny-iso-offline = fullIso.config.system.build.isoImage;
+            unattended-iso-offline = fullUnattended.config.system.build.isoImage;
           };
 
           devShells.default = pkgs.mkShell {
@@ -168,10 +213,38 @@
                   shellcheck -S warning ${./scripts/make-unattended-iso.sh}
                   touch $out
                 '';
+
+            offline-iso-size =
+              pkgs.runCommand "check-offline-iso-size"
+                {
+                  nativeBuildInputs = [ pkgs.coreutils ];
+                }
+                ''
+                  size=$(stat -c %s ${fullIso.config.system.build.isoImage}/iso/*.iso)
+                  echo "offline attended ISO: $size bytes"
+                  test "$size" -le 8000000000 || { echo "offline attended ISO exceeds 8 GB"; exit 1; }
+                  test "$size" -le 7400000000 || echo "warning: offline attended ISO exceeds 7.4 GB"
+                  touch $out
+                '';
+
+            offline-unattended-iso-size =
+              pkgs.runCommand "check-offline-unattended-iso-size"
+                {
+                  nativeBuildInputs = [ pkgs.coreutils ];
+                }
+                ''
+                  size=$(stat -c %s ${fullUnattended.config.system.build.isoImage}/iso/*.iso)
+                  echo "offline unattended ISO: $size bytes"
+                  test "$size" -le 8000000000 || { echo "offline unattended ISO exceeds 8 GB"; exit 1; }
+                  test "$size" -le 7400000000 || echo "warning: offline unattended ISO exceeds 7.4 GB"
+                  touch $out
+                '';
           };
         };
 
       flake.nixosConfigurations.ojuny-iso = iso;
       flake.nixosConfigurations.ojuny-unattended = unattended;
+      flake.nixosConfigurations.ojuny-iso-offline = fullIso;
+      flake.nixosConfigurations.ojuny-unattended-offline = fullUnattended;
     };
 }

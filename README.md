@@ -19,7 +19,7 @@ The modified flake is left in the installed system.
 - Calamares ISO install: 4 GB RAM minimum.
 - Unattended ISO install: 4 GB RAM minimum.
 - `nix run .#setup` from `ojuny-template`: 4 GB RAM, because it builds the compiled packages from source.
-- Network access for all install paths.
+- Network access for the online install paths. The offline ISOs do not need it.
 
 ## Build
 
@@ -28,6 +28,15 @@ nix build .#ojuny-iso
 ```
 
 The image is written to `result/iso/*.iso`.
+
+Build an offline full-system image:
+
+```sh
+nix build .#ojuny-iso-offline
+```
+
+The offline image is written to `result/iso/*.iso` and contains the full system
+runtime closure.
 
 For development:
 
@@ -56,7 +65,8 @@ scripts/make-unattended-iso.sh \
 The script prompts for firmware, account, password and SSH keys. It hashes the
 password before building, writes the settings to a temporary flake input, and
 copies the ISO to `result-unattended/`. Use `--dry-run` to inspect the settings
-and build command without building.
+and build command without building. Add `--offline` to build the full-system
+offline image instead.
 
 See `docs/unattended-install.md` for modes, the install flow and limitations.
 
@@ -84,8 +94,12 @@ Plain VGA, QXL and 2D `virtio-vga` render the Wayland session incorrectly.
 The ISO has been confirmed to boot with 4 GB RAM and 2 threads. Install time on
 that configuration has not been measured yet.
 
-The installer needs network access because `nixos-install` fetches the
-template's flake inputs.
+The online installer needs network access because `nixos-install` fetches the
+template's flake inputs. The offline images carry the full system runtime
+closure, so they install without network access. If a manual offline test finds
+a missing build input, add that path explicitly instead of enabling the full
+build-dependency closure. To test an offline image in QEMU, replace
+`-netdev user,id=net0 -device virtio-net-pci,netdev=net0` with `-nic none`.
 
 The Calamares ISO includes the compiled Ojuny GUI packages from the template's
 locked nixpkgs. The installed system uses the same template lock, so those store
@@ -118,6 +132,12 @@ Most of the build time is spent pre-building the six compiled applications.
 - `flake.nix`: inputs, dev shell, packages and the ISO outputs.
 - `nixos/iso.nix`: live Calamares ISO configuration.
 - `nixos/unattended.nix`: unattended installer ISO configuration.
+- `nixos/full-iso.nix`: full-system offline Calamares ISO configuration.
+- `nixos/full-unattended.nix`: full-system offline unattended ISO configuration.
+- `nixos/full-system.nix`: full template module set without machine hardware.
+- `nixos/full-hardware.nix`: generic hardware for the prebuilt target closure.
+- `nixos/target-bootloader.nix`: systemd-boot for the prebuilt target closure.
+- `nixos/offline.nix`: offline store, compression and size settings.
 - `nixos/unattended-install.py`: unattended install service.
 - `unattended/default-settings.nix`: unattended defaults.
 - `scripts/make-unattended-iso.sh`: settings generator and ISO build wrapper.
@@ -130,7 +150,8 @@ Most of the build time is spent pre-building the six compiled applications.
 - `x86_64-linux` only.
 - UEFI uses systemd-boot; BIOS uses GRUB.
 - Encrypted BIOS boot uses a generated GRUB keyfile and GRUB cryptodisk.
-- No offline install.
+- The offline ISOs target under 8,000,000,000 bytes so an 8 GB USB can hold
+  them. Check them with `scripts/check-iso-size.sh`.
 - The unattended ISO wipes the configured disk without an interactive
   installer.
 - The unattended ISO does not configure Wi-Fi. Use a wired connection.
