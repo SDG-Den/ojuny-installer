@@ -202,44 +202,22 @@ def user_module(username, fullname, hashed_password, shell, version):
 
 {{ self, inputs, ... }}: {{
 
-  flake.modules.nixos.users-{username} = {{ config, lib, pkgs, ... }}: {{
+  flake.modules.nixos.users-{username} = {{ pkgs, ... }}: {{
 
     imports = [ inputs.home-manager.nixosModules.home-manager ];
 
-    options.users.users = lib.mkOption {{
-      type = lib.types.attrsOf (lib.types.submodule ({{ name, ... }}: {{
-        options.ojunyShell = lib.mkOption {{
-          type = lib.types.enum [ "zsh" "bash" "fish" ];
-          default = "{shell}";
-          description = "Login shell for this account.";
-        }};
-      }}));
-    }};
-
     config = {{
-      /* @option widget = "submodule"; label = "Account"; group = "Account"; */
-      users.users.{username} = {{
-        /* @option widget = "text"; hidden = true; */
-        isNormalUser = true;
-        uid = 1000;
-
-        /* @option widget = "text"; label = "Description"; group = "Account"; */
-        description = {fullname};
-
-        /* @option widget = "list"; label = "Extra groups"; group = "Account"; */
-        extraGroups = [ "networkmanager" "wheel" "video" "input" ];
-
-        /* @option widget = "text"; label = "Hashed password"; group = "Account"; advanced = true; description = "A \\"!\\" keeps the account locked until a password is set."; */
-        hashedPassword = {hashed_password};
-
-        /* @option widget = "list"; label = "SSH keys"; group = "Account"; */
-        openssh.authorizedKeys.keys = [ ];
-
-        /* @option widget = "dropdown"; label = "Shell"; group = "Account"; choices = [ "zsh" "bash" "fish" ]; */
-        ojunyShell = "{shell}";
-
-        /* @option widget = "text"; label = "Shell"; group = "Account"; hidden = true; */
-        shell = pkgs.${{config.users.users.{username}.ojunyShell}};
+      /* @option widget = "users"; label = "Accounts"; */
+      users.users = {{
+        {username} = {{
+          isNormalUser = true;
+          uid = 1000;
+          description = {fullname};
+          extraGroups = [ "networkmanager" "wheel" "video" "input" ];
+          hashedPassword = {hashed_password};
+          openssh.authorizedKeys.keys = [ ];
+          shell = pkgs.{shell};
+        }};
       }};
 
       home-manager.users.{username}.home.stateVersion = "{version}";

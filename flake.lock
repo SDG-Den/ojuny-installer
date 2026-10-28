@@ -324,7 +324,10 @@
     },
     "firefox-addons": {
       "inputs": {
-        "nixpkgs": "nixpkgs"
+        "nixpkgs": [
+          "ojuny-template",
+          "nixpkgs"
+        ]
       },
       "locked": {
         "dir": "pkgs/firefox-addons",
@@ -698,11 +701,11 @@
         "tinted-theming": "tinted-theming"
       },
       "locked": {
-        "lastModified": 1793155211,
-        "narHash": "sha256-h600w4FHBnnxElo4ZFqwxggNEVXiRgbML5/DdfVU6VU=",
+        "lastModified": 1793192149,
+        "narHash": "sha256-l9rtEvFY4ayBGwF9ao5S3V29Fv5NkcQDb8mx0RnWHLY=",
         "owner": "SDG-Den",
         "repo": "nix-settings-gui",
-        "rev": "59fbb88840e4013b4c6ea559372132f018ce3b2a",
+        "rev": "d3ca41cce23e811ea76ac9466171ea58d95a7fe3",
         "type": "github"
       },
       "original": {
@@ -756,16 +759,16 @@
     },
     "nixpkgs": {
       "locked": {
-        "lastModified": 1744536153,
-        "narHash": "sha256-awS2zRgF4uTwrOKwwiJcByDzDOdo3Q1rPZbiHQg/N38=",
+        "lastModified": 1792773339,
+        "narHash": "sha256-rZLrzrC6i+jnTAlvPZHogKDulY7WWDEv9hJeHieO7Zw=",
         "owner": "nixos",
         "repo": "nixpkgs",
-        "rev": "18dd725c29603f582cf1900e0d25f9f1063dbf11",
+        "rev": "3ec636362e1816bc2f0888fa0fa2c69f1bc9e504",
         "type": "github"
       },
       "original": {
         "owner": "nixos",
-        "ref": "nixpkgs-unstable",
+        "ref": "nixos-unstable",
         "repo": "nixpkgs",
         "type": "github"
       }
@@ -797,22 +800,6 @@
       "original": {
         "owner": "nix-community",
         "repo": "nixpkgs.lib",
-        "type": "github"
-      }
-    },
-    "nixpkgs_2": {
-      "locked": {
-        "lastModified": 1792773339,
-        "narHash": "sha256-rZLrzrC6i+jnTAlvPZHogKDulY7WWDEv9hJeHieO7Zw=",
-        "owner": "nixos",
-        "repo": "nixpkgs",
-        "rev": "3ec636362e1816bc2f0888fa0fa2c69f1bc9e504",
-        "type": "github"
-      },
-      "original": {
-        "owner": "nixos",
-        "ref": "nixos-unstable",
-        "repo": "nixpkgs",
         "type": "github"
       }
     },
@@ -854,13 +841,13 @@
       "locked": {
         "lastModified": 1792888225,
         "narHash": "sha256-2uyJqOYiydw812VXiWBp7B1SKmxOdHfhPYWtZAWu2eI=",
-        "owner": "SDG-Den",
+        "owner": "ojuny-project",
         "repo": "ojuny-cli",
         "rev": "369d4cf6cda1af255f041c6760b5d77749a28fb2",
         "type": "github"
       },
       "original": {
-        "owner": "SDG-Den",
+        "owner": "ojuny-project",
         "repo": "ojuny-cli",
         "type": "github"
       }
@@ -893,13 +880,13 @@
       "locked": {
         "lastModified": 1793135349,
         "narHash": "sha256-oROyL8pr8eB6Dvz0Yk+VlhXF0RTGzm999+r3fJdUe3E=",
-        "owner": "SDG-Den",
+        "owner": "ojuny-project",
         "repo": "ojuny-desktop",
         "rev": "2fd5eeb3a05b5540087b821a604d8674cf6c64d6",
         "type": "github"
       },
       "original": {
-        "owner": "SDG-Den",
+        "owner": "ojuny-project",
         "repo": "ojuny-desktop",
         "type": "github"
       }
@@ -917,22 +904,22 @@
         "nix-settings-gui": "nix-settings-gui",
         "nix-shell-gui": "nix-shell-gui",
         "nixos-hardware": "nixos-hardware",
-        "nixpkgs": "nixpkgs_2",
+        "nixpkgs": "nixpkgs",
         "ojuny-cli": "ojuny-cli",
         "ojuny-desktop": "ojuny-desktop",
         "simple-nix-update-gui": "simple-nix-update-gui",
         "stylix": "stylix"
       },
       "locked": {
-        "lastModified": 1793176972,
-        "narHash": "sha256-Bg84pFFqTN3riDH6GGgjiTxtScuprptP2CngXIaT0so=",
-        "owner": "SDG-Den",
+        "lastModified": 1793192160,
+        "narHash": "sha256-TtO41ydzHOUPM/tvTiy0WX1fHLS4mnhUomTTvdDhUgM=",
+        "owner": "ojuny-project",
         "repo": "ojuny-template",
-        "rev": "38fe99993d6bf5687ea799dbe7a27a5d28046b7d",
+        "rev": "fbc4d67e2c650d7c2b87d8f81c96552362b02da4",
         "type": "github"
       },
       "original": {
-        "owner": "SDG-Den",
+        "owner": "ojuny-project",
         "repo": "ojuny-template",
         "type": "github"
       }

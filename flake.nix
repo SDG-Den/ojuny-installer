@@ -10,7 +10,7 @@
     };
 
     ojuny-template = {
-      url = "github:SDG-Den/ojuny-template";
+      url = "github:ojuny-project/ojuny-template";
     };
 
     disko = {

@@ -120,8 +120,13 @@ def detect_username(root):
     if not os.path.exists(path):
         return None
     with open(path) as handle:
-        match = re.search(r"users\.users\.([A-Za-z0-9_][A-Za-z0-9_-]*)\s*=", handle.read())
-    return match.group(1) if match else None
+        match = re.search(
+            r'users\.users\s*=\s*\{\s*(?:"([^"]+)"|([A-Za-z0-9_][A-Za-z0-9_-]*))\s*=',
+            handle.read(),
+        )
+    if not match:
+        return None
+    return match.group(1) or match.group(2)
 
 
 def detect_host(root):
@@ -138,7 +143,7 @@ def detect_shell(root):
     if not os.path.exists(path):
         return "zsh"
     with open(path) as handle:
-        match = re.search(r'ojunyShell\s*=\s*"([^"]+)"', handle.read())
+        match = re.search(r'shell\s*=\s*pkgs\.([A-Za-z0-9_-]+)\s*;', handle.read())
     return match.group(1) if match else "zsh"
 
 
@@ -231,8 +236,8 @@ def apply_user_settings(root, settings):
     if settings.get("shell"):
         text = replace_once(
             text,
-            r'ojunyShell\s*=\s*"[^"]*";',
-            "ojunyShell = {};".format(nix_string(settings["shell"])),
+            r'shell\s*=\s*pkgs\.[A-Za-z0-9_-]+\s*;',
+            "shell = pkgs.{};".format(settings["shell"]),
             "shell",
         )
 
