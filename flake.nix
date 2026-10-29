@@ -18,6 +18,13 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
+    # Local working copy of the cache daemon for the discovery ISO variant.
+    # Switch to github:SDG-Den/nix-cache-discovery before publishing.
+    nix-cache-discovery = {
+      url = "github:SDG-Den/nix-cache-discovery";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+
     settings.url = "path:./unattended/default";
   };
 
@@ -38,6 +45,12 @@
         inherit system;
         specialArgs = { inherit inputs; };
         modules = [ ./nixos/iso.nix ];
+      };
+
+      discoveryIso = nixpkgs.lib.nixosSystem {
+        inherit system;
+        specialArgs = { inherit inputs; };
+        modules = [ ./nixos/discovery-iso.nix ];
       };
 
       unattended = lib.nixosSystem {
@@ -120,6 +133,7 @@
             inherit ojuny-calamares-extensions calamares-ojuny;
 
             ojuny-iso = iso.config.system.build.isoImage;
+            ojuny-iso-discovery = discoveryIso.config.system.build.isoImage;
             unattended-iso = unattended.config.system.build.isoImage;
             ojuny-iso-offline = fullIso.config.system.build.isoImage;
             unattended-iso-offline = fullUnattended.config.system.build.isoImage;

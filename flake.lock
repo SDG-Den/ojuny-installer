@@ -749,7 +749,6 @@
     "nix-cache-discovery": {
       "inputs": {
         "nixpkgs": [
-          "ojuny-template",
           "nixpkgs"
         ]
       },
@@ -759,6 +758,27 @@
         "owner": "SDG-Den",
         "repo": "nix-cache-discovery",
         "rev": "4fa5ed6029a2c969e1d6790c5509c1ab0be8eafc",
+        "type": "github"
+      },
+      "original": {
+        "owner": "SDG-Den",
+        "repo": "nix-cache-discovery",
+        "type": "github"
+      }
+    },
+    "nix-cache-discovery_2": {
+      "inputs": {
+        "nixpkgs": [
+          "ojuny-template",
+          "nixpkgs"
+        ]
+      },
+      "locked": {
+        "lastModified": 1793310916,
+        "narHash": "sha256-91FUlw+SY+XvQguJ+PrSiKTEBkA8Ugp9QBbGYIxIgiI=",
+        "owner": "SDG-Den",
+        "repo": "nix-cache-discovery",
+        "rev": "224782ab5783cf1b7cbffa07530ac8500e5ecb54",
         "type": "github"
       },
       "original": {
@@ -992,11 +1012,11 @@
         ]
       },
       "locked": {
-        "lastModified": 1793304112,
-        "narHash": "sha256-32cwGC3LHPdETigiPZat0tffQDEBIy57EhS5jV/Et9c=",
+        "lastModified": 1793310918,
+        "narHash": "sha256-wWQMtylonRmxrL4PWUu8sO2F/1lRW1wqoZ67jrHoEII=",
         "owner": "ojuny-project",
         "repo": "ojuny-desktop",
-        "rev": "75b29c1d0c792e33b552e0c9baa1173730ca2ec8",
+        "rev": "f2859128e61c1149d70078eb8f03dd2d990ffaf2",
         "type": "github"
       },
       "original": {
@@ -1014,7 +1034,7 @@
         "flake-parts": "flake-parts_2",
         "home-manager": "home-manager",
         "import-tree": "import-tree",
-        "nix-cache-discovery": "nix-cache-discovery",
+        "nix-cache-discovery": "nix-cache-discovery_2",
         "nix-regedit": "nix-regedit",
         "nix-settings-gui": "nix-settings-gui",
         "nix-shell-gui": "nix-shell-gui",
@@ -1026,11 +1046,11 @@
         "stylix": "stylix"
       },
       "locked": {
-        "lastModified": 1793304120,
-        "narHash": "sha256-JHd8LbTS2zS/Qw/bJOBa1CMVVpcpU0jMbEuXhxo/93Y=",
+        "lastModified": 1793310926,
+        "narHash": "sha256-/U472tWARlIED/DYvQVTqHmb6LyPDvkjtpC25kr1xjs=",
         "owner": "ojuny-project",
         "repo": "ojuny-template",
-        "rev": "5f73c96333bb0354e9f3b75fdd97f6a21c4e5407",
+        "rev": "75f547a3f5343833f97782f29967003f149876bd",
         "type": "github"
       },
       "original": {
@@ -1043,6 +1063,7 @@
       "inputs": {
         "disko": "disko",
         "flake-parts": "flake-parts",
+        "nix-cache-discovery": "nix-cache-discovery",
         "nixpkgs": [
           "ojuny-template",
           "nixpkgs"
