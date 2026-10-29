@@ -64,10 +64,7 @@ in
     enable = true;
     exclusive = true;
     port = 5055;
-
-    # Switch to discovery.auto = true once the cache revision with that option
-    # is published. Until then the live ISO scans the common private range.
-    discovery.ranges = [ "192.168.0.0/16" ];
+    discovery.auto = true;
     discovery.interval = 60;
   };
 
