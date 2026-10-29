@@ -484,8 +484,6 @@ def install():
         "build-dir",
         "/nix/var/nix/builds",
     ]
-    if OFFLINE:
-        install_command += ["--option", "substituters", ""]
     run(install_command)
 
     shell = detect_shell(target)

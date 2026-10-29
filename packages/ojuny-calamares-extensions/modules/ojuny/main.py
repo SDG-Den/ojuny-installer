@@ -1047,9 +1047,6 @@ def install():
         "build-dir",
         "/nix/var/nix/builds",
     ]
-    if os.path.exists("/etc/ojuny/offline"):
-        command += ["--option", "substituters", ""]
-
     process = subprocess.Popen(
         command,
         stdout=subprocess.PIPE,
