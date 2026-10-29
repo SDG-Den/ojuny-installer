@@ -392,6 +392,36 @@ def unmount():
     subprocess.run(["umount", "-R", MOUNT], check=False)
 
 
+def preload_flake_inputs(mount):
+    path = "/etc/ojuny/flake-inputs"
+    if not os.path.exists(path):
+        return
+
+    with open(path) as handle:
+        inputs = [line.strip() for line in handle if line.strip()]
+
+    log("preloading {} flake inputs".format(len(inputs)))
+
+    for input_path in inputs:
+        name = os.path.basename(input_path)[33:]
+        added = output(
+            [
+                "nix",
+                "store",
+                "add-path",
+                "--store",
+                mount,
+                "--name",
+                name,
+                input_path,
+            ]
+        )
+        if added != input_path:
+            raise RuntimeError(
+                "flake input path mismatch: {} != {}".format(added, input_path)
+            )
+
+
 def install():
     settings = read_settings()
     disk = settings["disk"]
@@ -471,6 +501,9 @@ def install():
     apply_settings(target, settings, username, host, runtime_flake)
     regenerate_hardware(target, firmware, disk)
     git_init(target)
+
+    if OFFLINE:
+        preload_flake_inputs(MOUNT)
 
     log("installing NixOS from {}#{}".format(target, host))
     install_command = [

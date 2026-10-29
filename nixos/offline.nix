@@ -30,6 +30,8 @@ in
 
   environment.etc."ojuny/offline".text = "";
 
+  environment.etc."ojuny/flake-inputs".text = lib.concatMapStrings (path: path + "\n") flakeInputs;
+
   isoImage.storeContents = lib.mkAfter flakeInputs;
 
   isoImage.compressImage = false;

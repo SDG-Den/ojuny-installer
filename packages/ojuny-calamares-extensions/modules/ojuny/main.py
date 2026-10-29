@@ -816,6 +816,39 @@ class NixProgress:
         self._copies_expected = ce
 
 
+def preload_flake_inputs(root):
+    path = "/etc/ojuny/flake-inputs"
+    if not os.path.exists(path):
+        return
+
+    with open(path) as handle:
+        inputs = [line.strip() for line in handle if line.strip()]
+
+    libcalamares.utils.debug(
+        "Ojuny: adding {} flake inputs to the target store".format(len(inputs))
+    )
+
+    for input_path in inputs:
+        name = os.path.basename(input_path)[33:]
+        added = run_command(
+            [
+                cmd("pkexec"),
+                cmd("nix"),
+                "store",
+                "add-path",
+                "--store",
+                root,
+                "--name",
+                name,
+                input_path,
+            ]
+        ).strip()
+        if added != input_path:
+            raise RuntimeError(
+                "flake input path mismatch: {} != {}".format(added, input_path)
+            )
+
+
 def install():
     global_storage = libcalamares.globalstorage
     job_configuration = libcalamares.job.configuration
@@ -845,6 +878,7 @@ def install():
         "nixos-generate-config",
         "nixos-install",
         "nixos-enter",
+        "nix",
         "git",
         "env",
     ]
@@ -1030,6 +1064,11 @@ def install():
 
     if extra_file:
         os.unlink(extra_file)
+
+    if os.path.exists("/etc/ojuny/offline"):
+        libcalamares.job.setprogress(0.30)
+        libcalamares.utils.debug("Ojuny: adding flake inputs to the target store")
+        preload_flake_inputs(root)
 
     libcalamares.job.setprogress(0.32)
     libcalamares.utils.debug("Ojuny: starting nixos-install")
