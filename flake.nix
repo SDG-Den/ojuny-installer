@@ -257,6 +257,7 @@
         };
 
       flake.nixosConfigurations.ojuny-iso = iso;
+      flake.nixosConfigurations.ojuny-iso-discovery = discoveryIso;
       flake.nixosConfigurations.ojuny-unattended = unattended;
       flake.nixosConfigurations.ojuny-iso-offline = fullIso;
       flake.nixosConfigurations.ojuny-unattended-offline = fullUnattended;

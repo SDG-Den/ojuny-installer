@@ -68,21 +68,33 @@ in
     discovery.interval = 60;
   };
 
+  services.pipewire.package = pkgs.pipewire.overrideAttrs (old: {
+    outputs = [ "out" ];
+  });
+
   documentation.enable = lib.mkForce false;
   documentation.man.enable = lib.mkForce false;
   documentation.doc.enable = lib.mkForce false;
   documentation.nixos.enable = lib.mkForce false;
 
   environment.defaultPackages = lib.mkForce [
-    pkgs.vim
+    pkgs.gparted
     pkgs.nano
-    pkgs.mesa-demos
   ];
 
+  desktop.ojuny.fileManager.enable = lib.mkForce false;
+
+  desktop.ojuny.defaultApps = lib.mkForce [
+    pkgs.ghostty
+    inputs.ojuny-template.inputs.ojuny-desktop.inputs.dux-gop.packages.${pkgs.system}.default
+    inputs.ojuny-template.inputs.ojuny-desktop.inputs.dux-search.packages.${pkgs.system}.default
+    inputs.ojuny-template.inputs.ojuny-desktop.packages.${pkgs.system}.ojuny-WinMenu
+  ];
+
+  fonts.enableDefaultFonts = lib.mkForce false;
+  fonts.packages = lib.mkForce [ pkgs.nerd-fonts.caskaydia-cove ];
+
   nixpkgs.overlays = [
-    (final: prev: {
-      glibcLocales = prev.glibcLocalesUtf8;
-    })
     (final: prev: {
       khal = prev.khal.overrideAttrs (old: {
         postInstall = (old.postInstall or "") + ''
@@ -177,7 +189,6 @@ in
       terminal = false;
     })
     pkgs.cryptsetup
-    pkgs.glibcLocales
     pkgs.mkpasswd
     pkgs.nixos-facter
     pkgs.zsh
