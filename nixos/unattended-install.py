@@ -366,6 +366,7 @@ def write_gui_config(home, flake, host, shell):
         "rebuild_command": 'sudo echo "starting rebuild"; sudo nixos-rebuild boot --flake {}#{}'.format(
             flake, host
         ),
+        "reload_dms_on_rebuild": True,
     }
     with open(os.path.join(config_dir, "config.json"), "w") as handle:
         json.dump(payload, handle, indent=2)

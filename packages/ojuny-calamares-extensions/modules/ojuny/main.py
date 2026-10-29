@@ -849,6 +849,22 @@ def preload_flake_inputs(root):
             )
 
 
+def write_gui_config(home, clone, host, shell):
+    config_dir = os.path.join(home, ".config", "nix-settings-gui")
+    config_path = os.path.join(config_dir, "config.json")
+    run_command([cmd("pkexec"), cmd("install"), "-d", "-m", "0755", config_dir])
+    payload = {
+        "flake_path": clone,
+        "terminal_command": "ghostty -e {} -c".format(shell),
+        "rebuild_command": 'sudo echo "starting rebuild"; sudo nixos-rebuild boot --flake {}#{}'.format(
+            clone, host
+        ),
+        "reload_dms_on_rebuild": True,
+    }
+    write_file(config_path, json.dumps(payload, indent=2) + "\n")
+    run_command([cmd("pkexec"), cmd("chown"), "1000:100", config_dir, config_path])
+
+
 def install():
     global_storage = libcalamares.globalstorage
     job_configuration = libcalamares.job.configuration
@@ -1157,6 +1173,7 @@ def install():
     run_command([cmd("pkexec"), cmd("chown"), "1000:100", repos_dir])
     run_command([cmd("pkexec"), cmd("chown"), "-R", "1000:100", clone])
     run_command([cmd("pkexec"), cmd("chown"), "1000:100", home])
+    write_gui_config(home, runtime_clone, hostname, shell)
     if os.path.exists(credential_path):
         run_command([cmd("pkexec"), cmd("chown"), "1000:100", credential_path])
         run_command([cmd("pkexec"), cmd("chmod"), "600", credential_path])
