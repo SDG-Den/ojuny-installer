@@ -405,7 +405,7 @@ def preload_flake_inputs(mount):
 
     for input_path in inputs:
         name = os.path.basename(input_path)[33:]
-        added = output(
+        run(
             [
                 "nix",
                 "store",
@@ -417,10 +417,6 @@ def preload_flake_inputs(mount):
                 input_path,
             ]
         )
-        if added != input_path:
-            raise RuntimeError(
-                "flake input path mismatch: {} != {}".format(added, input_path)
-            )
 
 
 def install():

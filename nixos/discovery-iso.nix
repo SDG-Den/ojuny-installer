@@ -68,10 +68,6 @@ in
     discovery.interval = 60;
   };
 
-  services.pipewire.package = pkgs.pipewire.overrideAttrs (old: {
-    outputs = [ "out" ];
-  });
-
   documentation.enable = lib.mkForce false;
   documentation.man.enable = lib.mkForce false;
   documentation.doc.enable = lib.mkForce false;

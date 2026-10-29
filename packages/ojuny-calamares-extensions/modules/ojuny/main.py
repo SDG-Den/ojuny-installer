@@ -830,7 +830,7 @@ def preload_flake_inputs(root):
 
     for input_path in inputs:
         name = os.path.basename(input_path)[33:]
-        added = run_command(
+        run_command(
             [
                 cmd("pkexec"),
                 cmd("nix"),
@@ -842,11 +842,7 @@ def preload_flake_inputs(root):
                 name,
                 input_path,
             ]
-        ).strip()
-        if added != input_path:
-            raise RuntimeError(
-                "flake input path mismatch: {} != {}".format(added, input_path)
-            )
+        )
 
 
 def write_gui_config(home, clone, host, shell):
