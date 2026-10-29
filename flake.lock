@@ -753,11 +753,11 @@
         ]
       },
       "locked": {
-        "lastModified": 1793285303,
-        "narHash": "sha256-R7hqZHvO0YCAbujMxB+4S4PSgDXhdK6fnR4YQE6SITc=",
+        "lastModified": 1793310916,
+        "narHash": "sha256-91FUlw+SY+XvQguJ+PrSiKTEBkA8Ugp9QBbGYIxIgiI=",
         "owner": "SDG-Den",
         "repo": "nix-cache-discovery",
-        "rev": "4fa5ed6029a2c969e1d6790c5509c1ab0be8eafc",
+        "rev": "224782ab5783cf1b7cbffa07530ac8500e5ecb54",
         "type": "github"
       },
       "original": {
