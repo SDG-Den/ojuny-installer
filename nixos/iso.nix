@@ -39,7 +39,10 @@ in
     inputs.ojuny-template.modules.nixos.desktop-mangoworkspaces
     inputs.ojuny-template.modules.nixos.desktop-scroller
     inputs.ojuny-template.modules.nixos.desktop-display
-    inputs.ojuny-template.modules.nixos.desktop-style
+    inputs.ojuny-template.modules.nixos.desktop-style-theme
+    inputs.ojuny-template.modules.nixos.desktop-style-typography
+    inputs.ojuny-template.modules.nixos.desktop-style-compositor
+    inputs.ojuny-template.modules.nixos.desktop-style-shell
     inputs.ojuny-template.modules.nixos.desktop-bar
     inputs.ojuny-template.modules.nixos.desktop-dock
     inputs.ojuny-template.modules.nixos.desktop-dashboard

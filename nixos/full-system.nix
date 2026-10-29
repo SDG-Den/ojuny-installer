@@ -22,9 +22,13 @@
     inputs.ojuny-template.modules.nixos.desktop-mangomaster
     inputs.ojuny-template.modules.nixos.desktop-mangodwindle
     inputs.ojuny-template.modules.nixos.desktop-mangoworkspaces
+    inputs.ojuny-template.modules.nixos.desktop-monocledeck
     inputs.ojuny-template.modules.nixos.desktop-scroller
     inputs.ojuny-template.modules.nixos.desktop-display
-    inputs.ojuny-template.modules.nixos.desktop-style
+    inputs.ojuny-template.modules.nixos.desktop-style-theme
+    inputs.ojuny-template.modules.nixos.desktop-style-typography
+    inputs.ojuny-template.modules.nixos.desktop-style-compositor
+    inputs.ojuny-template.modules.nixos.desktop-style-shell
     inputs.ojuny-template.modules.nixos.desktop-bar
     inputs.ojuny-template.modules.nixos.desktop-dock
     inputs.ojuny-template.modules.nixos.desktop-dashboard
@@ -39,13 +43,13 @@
     inputs.ojuny-template.modules.nixos.desktop-binds
     inputs.ojuny-template.modules.nixos.desktop-autostart
     inputs.ojuny-template.modules.nixos.desktop-input
-    inputs.ojuny-template.modules.nixos.desktop-input-method
     inputs.ojuny-template.modules.nixos.desktop-login
     inputs.ojuny-template.modules.nixos.desktop-controlcenter
     inputs.ojuny-template.modules.nixos.desktop-gestures
     inputs.ojuny-template.modules.nixos.desktop-launcher
 
     inputs.ojuny-template.modules.nixos.applications-applist
+    inputs.ojuny-template.modules.nixos.desktop-dux-tools
     inputs.ojuny-template.modules.nixos.applications-screenshot
     inputs.ojuny-template.modules.nixos.applications-browser
     inputs.ojuny-template.modules.nixos.applications-git
@@ -69,5 +73,6 @@
     inputs.ojuny-template.modules.homeManager.applications-terminal-fastfetch
     inputs.ojuny-template.modules.homeManager.desktop-screensaver
     inputs.ojuny-template.modules.homeManager.applications-webapps
+    inputs.ojuny-template.modules.homeManager.dux-tools
   ];
 }
