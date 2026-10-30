@@ -217,6 +217,7 @@ in
       terminal = false;
     })
     pkgs.cryptsetup
+    pkgs.kdePackages.kpmcore
     pkgs.mkpasswd
     pkgs.nixos-facter
     pkgs.zsh
