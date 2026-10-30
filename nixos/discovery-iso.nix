@@ -91,7 +91,7 @@ in
   desktop.ojuny.fileManager.enable = lib.mkForce false;
 
   programs.kdeconnect.enable = lib.mkForce false;
-  qt.enable = lib.mkForce false;
+  qt.enable = lib.mkForce true;
   services.gvfs.enable = lib.mkForce false;
   services.udisks2.enable = lib.mkForce true;
   systemd.services.udisks2.wantedBy = [ "multi-user.target" ];
@@ -221,6 +221,18 @@ in
     pkgs.nixos-facter
     pkgs.zsh
   ];
+
+  # Temporary remote debugging access for the discovery ISO.
+  services.openssh = {
+    enable = true;
+    settings.PermitRootLogin = "prohibit-password";
+  };
+
+  users.users.root.openssh.authorizedKeys.keys = [
+    "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIA4aHtgEXDU+Hoy3jBzEx42C1stuRo2Rv2jLX4Vc6M9Z ojuny-test-temporary"
+  ];
+
+  networking.firewall.allowedTCPPorts = [ 22 ];
 
   services.upower.enable = true;
 
