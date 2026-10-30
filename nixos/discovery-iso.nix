@@ -1,4 +1,5 @@
 {
+  config,
   lib,
   pkgs,
   inputs,
@@ -7,13 +8,22 @@
 }:
 
 let
-  extensions = pkgs.callPackage ../packages/ojuny-calamares-extensions {
-    templatePath = inputs.ojuny-template.outPath;
-    prepareRepo = (inputs.ojuny-template.packages.${pkgs.system} or { }).prepare-repo or null;
-    regenerateHardware =
-      (inputs.ojuny-template.packages.${pkgs.system} or { }).regenerate-hardware or null;
-    mkpasswd = pkgs.mkpasswd;
-  };
+  extensions = (
+    pkgs.callPackage ../packages/ojuny-calamares-extensions {
+      templatePath = inputs.ojuny-template.outPath;
+      prepareRepo = (inputs.ojuny-template.packages.${pkgs.system} or { }).prepare-repo or null;
+      regenerateHardware =
+        (inputs.ojuny-template.packages.${pkgs.system} or { }).regenerate-hardware or null;
+      mkpasswd = pkgs.mkpasswd;
+    }
+  ).overrideAttrs (previous: {
+    postInstall = (previous.postInstall or "") + ''
+      if [ -f $out/etc/calamares/modules/locale.conf ]; then
+        substituteInPlace $out/etc/calamares/modules/locale.conf \
+          --replace-fail "${pkgs.glibcLocales}" "${config.i18n.glibcLocales}"
+      fi
+    '';
+  });
 
   calamaresPkg = pkgs.calamares.overrideAttrs (previous: {
     patches = lib.filter (patch: !(lib.hasInfix "dont-allow-manual-luks" (toString patch))) (
@@ -80,6 +90,12 @@ in
 
   desktop.ojuny.fileManager.enable = lib.mkForce false;
 
+  programs.kdeconnect.enable = lib.mkForce false;
+  qt.enable = lib.mkForce false;
+  services.gvfs.enable = lib.mkForce false;
+  services.udisks2.enable = lib.mkForce true;
+  programs.git.package = pkgs.gitMinimal;
+
   desktop.ojuny.defaultApps = lib.mkForce [
     pkgs.ghostty
     inputs.ojuny-template.inputs.ojuny-desktop.inputs.dux-gop.packages.${pkgs.system}.default
@@ -91,6 +107,20 @@ in
   fonts.packages = lib.mkForce [ pkgs.nerd-fonts.caskaydia-cove ];
 
   nixpkgs.overlays = [
+    (final: prev: {
+      linux-firmware = prev.linux-firmware.overrideAttrs (old: {
+        postInstall = (old.postInstall or "") + ''
+          rm -rf $out/lib/firmware/{qcom,nvidia,mellanox,mrvl,mediatek,qed,netronome,dpaa2,ti-connectivity}
+          find $out/lib/firmware -xtype l -delete
+        '';
+      });
+
+      wlr-utils = final.runCommandLocal "wlr-utils" { } "mkdir -p $out/bin";
+
+      kdePackages = prev.kdePackages // {
+        kdeconnect-kde = final.runCommandLocal "kdeconnect-kde" { } "mkdir -p $out/bin";
+      };
+    })
     (final: prev: {
       khal = prev.khal.overrideAttrs (old: {
         postInstall = (old.postInstall or "") + ''
@@ -168,7 +198,7 @@ in
   ];
 
   security.polkit.enablePkexecWrapper = true;
-  programs.partition-manager.enable = true;
+  programs.partition-manager.enable = lib.mkForce false;
   i18n.supportedLocales = lib.mkForce [
     "en_US.UTF-8/UTF-8"
     "nl_NL.UTF-8/UTF-8"
