@@ -100,7 +100,6 @@ in
     };
   };
 
-  services.displayManager.ly.enable = true;
   services.displayManager.defaultSession = "ojuny";
   services.displayManager.autoLogin = {
     enable = true;
@@ -159,7 +158,6 @@ in
     };
   };
 
-  programs.dms-greeter.enable = lib.mkForce false;
   ojuny.plymouth.enable = lib.mkForce false;
 
   isoImage.storeContents = lib.mkAfter [

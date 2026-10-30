@@ -53,6 +53,7 @@ in
     inputs.ojuny-template.modules.nixos.desktop-binds
     inputs.ojuny-template.modules.nixos.desktop-autostart
     inputs.ojuny-template.modules.nixos.desktop-input
+    inputs.ojuny-template.modules.nixos.desktop-login
     inputs.ojuny-template.modules.nixos.desktop-controlcenter
     inputs.ojuny-template.modules.nixos.desktop-gestures
     inputs.ojuny-template.modules.nixos.desktop-launcher
@@ -121,7 +122,6 @@ in
     };
   };
 
-  services.displayManager.ly.enable = true;
   services.displayManager.defaultSession = "ojuny";
   services.displayManager.autoLogin = {
     enable = true;

@@ -828,21 +828,7 @@ def preload_flake_inputs(root):
         "Ojuny: adding {} flake inputs to the target store".format(len(inputs))
     )
 
-    for input_path in inputs:
-        name = os.path.basename(input_path)[33:]
-        run_command(
-            [
-                cmd("pkexec"),
-                cmd("nix"),
-                "store",
-                "add-path",
-                "--store",
-                root,
-                "--name",
-                name,
-                input_path,
-            ]
-        )
+    run_command([cmd("pkexec"), cmd("nix"), "copy", "--to", root] + inputs)
 
 
 def write_gui_config(home, clone, host, shell):

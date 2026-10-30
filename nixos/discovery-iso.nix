@@ -8,22 +8,22 @@
 }:
 
 let
-  extensions = (
-    pkgs.callPackage ../packages/ojuny-calamares-extensions {
+  extensions =
+    (pkgs.callPackage ../packages/ojuny-calamares-extensions {
       templatePath = inputs.ojuny-template.outPath;
       prepareRepo = (inputs.ojuny-template.packages.${pkgs.system} or { }).prepare-repo or null;
       regenerateHardware =
         (inputs.ojuny-template.packages.${pkgs.system} or { }).regenerate-hardware or null;
       mkpasswd = pkgs.mkpasswd;
-    }
-  ).overrideAttrs (previous: {
-    postInstall = (previous.postInstall or "") + ''
-      if [ -f $out/etc/calamares/modules/locale.conf ]; then
-        substituteInPlace $out/etc/calamares/modules/locale.conf \
-          --replace-fail "${pkgs.glibcLocales}" "${config.i18n.glibcLocales}"
-      fi
-    '';
-  });
+    }).overrideAttrs
+      (previous: {
+        postInstall = (previous.postInstall or "") + ''
+          if [ -f $out/etc/calamares/modules/locale.conf ]; then
+            substituteInPlace $out/etc/calamares/modules/locale.conf \
+              --replace-fail "${pkgs.glibcLocales}" "${config.i18n.glibcLocales}"
+          fi
+        '';
+      });
 
   calamaresPkg = pkgs.calamares.overrideAttrs (previous: {
     patches = lib.filter (patch: !(lib.hasInfix "dont-allow-manual-luks" (toString patch))) (
@@ -63,6 +63,7 @@ in
     inputs.ojuny-template.modules.nixos.desktop-binds
     inputs.ojuny-template.modules.nixos.desktop-autostart
     inputs.ojuny-template.modules.nixos.desktop-input
+    inputs.ojuny-template.modules.nixos.desktop-login
     inputs.ojuny-template.modules.nixos.desktop-controlcenter
     inputs.ojuny-template.modules.nixos.desktop-gestures
     inputs.ojuny-template.modules.nixos.desktop-launcher
@@ -195,7 +196,6 @@ in
     };
   };
 
-  services.displayManager.ly.enable = true;
   services.displayManager.defaultSession = "ojuny";
   services.displayManager.autoLogin = {
     enable = true;
