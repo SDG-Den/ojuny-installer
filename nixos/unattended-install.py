@@ -402,7 +402,7 @@ def preload_flake_inputs(mount):
         inputs = [line.strip() for line in handle if line.strip()]
 
     log("preloading {} flake inputs".format(len(inputs)))
-    run(["nix", "copy", "--to", mount] + inputs)
+    run(["nix", "copy", "--no-check-sigs", "--to", mount] + inputs)
 
 
 def install():

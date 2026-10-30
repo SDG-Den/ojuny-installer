@@ -77,8 +77,11 @@ in
     port = 5055;
     discovery.auto = true;
     discovery.interval = 60;
+    discovery.timeout = 2000;
     proxy.wait = 240;
   };
+
+  networking.networkmanager.wifi.powersave = false;
 
   # Live-only client patience for the installer. The cache daemon holds
   # requests while no peer is reachable, and these settings let the live nix

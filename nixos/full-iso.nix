@@ -103,7 +103,7 @@ in
   services.displayManager.defaultSession = "ojuny";
   services.displayManager.autoLogin = {
     enable = true;
-    user = "user";
+    user = "nixos";
   };
 
   services.speechd.enable = lib.mkForce false;
