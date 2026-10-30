@@ -77,7 +77,9 @@ in
 
   ojuny.gpu = lib.mkForce "none";
 
-  isoImage.edition = "installer";
+  isoImage.edition = lib.mkForce "installer";
+  isoImage.volumeID = lib.mkForce "OJUNY_INSTALLER";
+  image.baseName = lib.mkForce "ojuny-installer";
 
   desktop.ojuny.mango.execOnce = lib.mkForce [
     "dms run"
