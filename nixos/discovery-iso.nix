@@ -94,6 +94,8 @@ in
   qt.enable = lib.mkForce false;
   services.gvfs.enable = lib.mkForce false;
   services.udisks2.enable = lib.mkForce true;
+  systemd.services.udisks2.wantedBy = [ "multi-user.target" ];
+  services.dbus.packages = [ pkgs.kdePackages.kpmcore ];
   programs.git.package = pkgs.gitMinimal;
 
   desktop.ojuny.defaultApps = lib.mkForce [
