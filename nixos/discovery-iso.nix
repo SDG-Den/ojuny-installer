@@ -76,6 +76,16 @@ in
     port = 5055;
     discovery.auto = true;
     discovery.interval = 60;
+    proxy.wait = 240;
+  };
+
+  # Live-only client patience for the installer. The cache daemon holds
+  # requests while no peer is reachable, and these settings let the live nix
+  # wait through a network drop instead of failing the install.
+  nix.settings = {
+    connect-timeout = 30;
+    download-attempts = 10;
+    stalled-download-timeout = 600;
   };
 
   documentation.enable = lib.mkForce false;
