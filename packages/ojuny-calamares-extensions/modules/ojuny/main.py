@@ -1142,6 +1142,12 @@ def install():
         run_command([cmd("pkexec"), cmd("chown"), "1000:100", credential_path])
         run_command([cmd("pkexec"), cmd("chmod"), "600", credential_path])
 
+    # home-manager activation runs as root during nixos-install and creates
+    # ~/.config entries owned by root. Hand the whole home tree back to the
+    # user so the desktop session can write its own configuration.
+    libcalamares.utils.debug("Ojuny: fixing home ownership")
+    run_command([cmd("pkexec"), cmd("chown"), "-R", "1000:100", home])
+
     libcalamares.job.setprogress(1.0)
     libcalamares.utils.debug("Ojuny: installation finished")
     return None
