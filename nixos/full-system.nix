@@ -4,6 +4,7 @@
   imports = [
     inputs.ojuny-template.modules.nixos.system-configuration
     inputs.ojuny-template.modules.nixos.system-facter
+    inputs.ojuny-template.modules.nixos.system-hardware-profile
     inputs.ojuny-template.modules.nixos.system-networking
     inputs.ojuny-template.modules.nixos.system-bluetooth
     inputs.ojuny-template.modules.nixos.system-graphics
