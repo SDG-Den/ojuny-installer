@@ -816,21 +816,6 @@ class NixProgress:
         self._copies_expected = ce
 
 
-def preload_flake_inputs(root):
-    path = "/etc/ojuny/flake-inputs"
-    if not os.path.exists(path):
-        return
-
-    with open(path) as handle:
-        inputs = [line.strip() for line in handle if line.strip()]
-
-    libcalamares.utils.debug(
-        "Ojuny: adding {} flake inputs to the target store".format(len(inputs))
-    )
-
-    run_command([cmd("pkexec"), cmd("nix"), "copy", "--no-check-sigs", "--to", root] + inputs)
-
-
 def write_gui_config(home, clone, host, shell):
     config_dir = os.path.join(home, ".config", "nix-settings-gui")
     config_path = os.path.join(config_dir, "config.json")
@@ -876,7 +861,6 @@ def install():
         "nixos-generate-config",
         "nixos-install",
         "nixos-enter",
-        "nix",
         "git",
         "env",
     ]
@@ -1063,11 +1047,6 @@ def install():
     if extra_file:
         os.unlink(extra_file)
 
-    if os.path.exists("/etc/ojuny/offline"):
-        libcalamares.job.setprogress(0.30)
-        libcalamares.utils.debug("Ojuny: adding flake inputs to the target store")
-        preload_flake_inputs(root)
-
     libcalamares.job.setprogress(0.32)
     libcalamares.utils.debug("Ojuny: starting nixos-install")
     run_command([cmd("pkexec"), cmd("chmod"), "755", root])
@@ -1084,6 +1063,9 @@ def install():
         "build-dir",
         "/nix/var/nix/builds",
     ]
+    if os.path.exists("/etc/ojuny/offline"):
+        command += ["--option", "substituters", "auto?trusted=1"]
+
     process = subprocess.Popen(
         command,
         stdout=subprocess.PIPE,

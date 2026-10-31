@@ -393,18 +393,6 @@ def unmount():
     subprocess.run(["umount", "-R", MOUNT], check=False)
 
 
-def preload_flake_inputs(mount):
-    path = "/etc/ojuny/flake-inputs"
-    if not os.path.exists(path):
-        return
-
-    with open(path) as handle:
-        inputs = [line.strip() for line in handle if line.strip()]
-
-    log("preloading {} flake inputs".format(len(inputs)))
-    run(["nix", "copy", "--no-check-sigs", "--to", mount] + inputs)
-
-
 def install():
     settings = read_settings()
     disk = settings["disk"]
@@ -485,9 +473,6 @@ def install():
     regenerate_hardware(target, firmware, disk)
     git_init(target)
 
-    if OFFLINE:
-        preload_flake_inputs(MOUNT)
-
     log("installing NixOS from {}#{}".format(target, host))
     install_command = [
         "nixos-install",
@@ -500,6 +485,8 @@ def install():
         "build-dir",
         "/nix/var/nix/builds",
     ]
+    if OFFLINE:
+        install_command += ["--option", "substituters", "auto?trusted=1"]
     run(install_command)
 
     shell = detect_shell(target)
