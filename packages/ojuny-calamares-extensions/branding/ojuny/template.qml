@@ -29,7 +29,6 @@ Rectangle {
         RadioButton {
             id: bundledButton
             text: qsTr("Use the bundled Ojuny template")
-            checked: true
             palette.windowText: "#d3c6aa"
             palette.highlight: "#a7c080"
             palette.highlightedText: "#2d353b"
@@ -58,6 +57,7 @@ Rectangle {
             }
 
             TextField {
+                id: urlField
                 Layout.fillWidth: true
                 color: "#d3c6aa"
                 placeholderTextColor: "#7a8478"
@@ -76,6 +76,7 @@ Rectangle {
             }
 
             TextField {
+                id: tokenField
                 Layout.fillWidth: true
                 color: "#d3c6aa"
                 placeholderTextColor: "#7a8478"
@@ -88,12 +89,55 @@ Rectangle {
                 }
                 onTextChanged: Global.insert("ojuny_template_token", text)
             }
+
+            Label {
+                text: qsTr("Branch")
+                color: "#d3c6aa"
+            }
+
+            TextField {
+                id: branchField
+                Layout.fillWidth: true
+                color: "#d3c6aa"
+                placeholderTextColor: "#7a8478"
+                placeholderText: qsTr("Optional, defaults to the repository default")
+                background: Rectangle {
+                    color: "#343f44"
+                    border.color: "#475258"
+                    radius: 3
+                }
+                onTextChanged: Global.insert("ojuny_template_branch", text)
+            }
+        }
+
+        Text {
+            Layout.fillWidth: true
+            visible: preparedButton.checked
+            color: "#d3c6aa"
+            wrapMode: Text.WordWrap
+            text: qsTr("In prepared mode Ojuny clones the repository, reads the hostname from modules/07-system/00-host.nix, and regenerates only the hardware module. The hostname on the Users page is not used. An HTTPS URL with a token writes ~/.git-credentials with mode 0600; an SSH clone uses your key and gets no credential helper.")
         }
     }
 
     Component.onCompleted: {
-        Global.insert("ojuny_template_mode", "bundled");
-        Global.insert("ojuny_template_url", "");
-        Global.insert("ojuny_template_token", "");
+        var savedMode = Global.value("ojuny_template_mode") || "bundled";
+        var savedUrl = Global.value("ojuny_template_url") || "";
+        var savedToken = Global.value("ojuny_template_token") || "";
+        var savedBranch = Global.value("ojuny_template_branch") || "";
+
+        if (!Global.contains("ojuny_template_mode"))
+            Global.insert("ojuny_template_mode", savedMode);
+        if (!Global.contains("ojuny_template_url"))
+            Global.insert("ojuny_template_url", savedUrl);
+        if (!Global.contains("ojuny_template_token"))
+            Global.insert("ojuny_template_token", savedToken);
+        if (!Global.contains("ojuny_template_branch"))
+            Global.insert("ojuny_template_branch", savedBranch);
+
+        preparedButton.checked = savedMode === "prepared";
+        bundledButton.checked = savedMode !== "prepared";
+        urlField.text = savedUrl;
+        tokenField.text = savedToken;
+        branchField.text = savedBranch;
     }
 }

@@ -20,7 +20,7 @@ strings:
   productUrl: https://github.com/SDG-Den/ojuny-template
   supportUrl: https://github.com/SDG-Den/ojuny-template/issues
   knownIssuesUrl: https://github.com/SDG-Den/ojuny-installer/issues
-  releaseNotesUrl: ""
+  releaseNotesUrl: https://github.com/SDG-Den/ojuny-installer/releases
   donateUrl: ""
 
 images:

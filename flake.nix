@@ -185,6 +185,15 @@
                   test -f ${ojuny-calamares-extensions}/share/calamares/branding/ojuny/stylesheet.qss
                   grep -q 'notesqml@template' ${ojuny-calamares-extensions}/etc/calamares/settings.conf
                   grep -q 'notesqml@origin' ${ojuny-calamares-extensions}/etc/calamares/settings.conf
+                  grep -q 'notesqml@welcome-notes' ${ojuny-calamares-extensions}/etc/calamares/settings.conf
+                  grep -q 'notesqml@partition-notes' ${ojuny-calamares-extensions}/etc/calamares/settings.conf
+                  grep -q 'notesqml@summary-notes' ${ojuny-calamares-extensions}/etc/calamares/settings.conf
+                  test -f ${ojuny-calamares-extensions}/etc/calamares/modules/notes-welcome.conf
+                  test -f ${ojuny-calamares-extensions}/etc/calamares/modules/notes-partition.conf
+                  test -f ${ojuny-calamares-extensions}/etc/calamares/modules/notes-summary.conf
+                  test -f ${ojuny-calamares-extensions}/share/calamares/branding/ojuny/notes-welcome.qml
+                  test -f ${ojuny-calamares-extensions}/share/calamares/branding/ojuny/notes-partition.qml
+                  test -f ${ojuny-calamares-extensions}/share/calamares/branding/ojuny/notes-summary.qml
                   yq -e '.requirements.requiredStorage == 30' ${ojuny-calamares-extensions}/etc/calamares/modules/welcome.conf
                   yq -e '.requirements.required | contains(["storage"]) | not' ${ojuny-calamares-extensions}/etc/calamares/modules/welcome.conf
                   yq -e '.mkpasswd | length > 0' ${ojuny-calamares-extensions}/etc/calamares/modules/ojuny.conf

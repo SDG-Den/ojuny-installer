@@ -127,6 +127,24 @@ Most of the build time is spent pre-building the six compiled applications.
 - The account password is written as `hashedPassword`; `users.mutableUsers`
   stays `false`, so password changes go through the settings GUI and a rebuild.
 
+## Git credentials
+
+The installer writes `~/.git-credentials` only when the selected repository URL
+is HTTPS and a token is provided. The file is mode `0600`, and the repository
+uses `credential.helper = store --file=/home/<user>/.git-credentials`. An SSH
+clone uses the user's SSH key: it gets no helper and no credential file. The
+file stays until the user removes it. This is the deferred secrets handling
+boundary described in `ojuny-docs/canon/09-security.md`.
+
+## Attended install tests
+
+Attended results and the pending runs live in
+[docs/attended-install.md](docs/attended-install.md). The prepared-repository
+and git pre-setup checks are
+`scripts/test-prepared-install.sh` and `scripts/test-git-presetup-install.sh`.
+Both boot QEMU and inspect the installed disk afterwards. They are written but
+not run yet.
+
 ## Layout
 
 - `flake.nix`: inputs, dev shell, packages and the ISO outputs.
@@ -141,6 +159,9 @@ Most of the build time is spent pre-building the six compiled applications.
 - `nixos/unattended-install.py`: unattended install service.
 - `unattended/default-settings.nix`: unattended defaults.
 - `scripts/make-unattended-iso.sh`: settings generator and ISO build wrapper.
+- `scripts/test-prepared-install.sh`: QEMU check for a prepared template install.
+- `scripts/test-git-presetup-install.sh`: QEMU check for the git pre-setup path.
+- `docs/attended-install.md`: attended results and the pending run list.
 - `packages/calamares-ojuny.nix`: Calamares wrapper pointing at our extensions.
 - `packages/ojuny-calamares-extensions/`: settings, branding and the `ojuny`
   job module that installs the template.

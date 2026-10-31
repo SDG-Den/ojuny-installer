@@ -506,10 +506,15 @@ def run_script(path, args):
     run_command([cmd("pkexec"), path] + args)
 
 
-def clone_prepared(url, token, clone):
+def clone_prepared(url, token, branch, clone):
     git = cmd("git")
     if os.path.exists(clone):
         run_command([cmd("pkexec"), cmd("rm"), "-rf", clone])
+
+    clone_args = ["clone"]
+    if branch:
+        clone_args += ["--branch", branch]
+    clone_args += [url, clone]
 
     if token and url.startswith(("http://", "https://")):
         parsed = urlparse(url)
@@ -535,15 +540,13 @@ def clone_prepared(url, token, clone):
                     git,
                     "-c",
                     "credential.helper=store --file={path}".format(path=credentials),
-                    "clone",
-                    url,
-                    clone,
                 ]
+                + clone_args
             )
         finally:
             shutil.rmtree(temp_dir, ignore_errors=True)
     else:
-        run_command([cmd("pkexec"), git, "clone", url, clone])
+        run_command([cmd("pkexec"), git] + clone_args)
 
 
 def prepared_hostname(clone):
@@ -910,6 +913,7 @@ def install():
     mode = global_storage.value("ojuny_template_mode") or "bundled"
     template_url = (global_storage.value("ojuny_template_url") or "").strip()
     template_token = (global_storage.value("ojuny_template_token") or "").strip()
+    template_branch = (global_storage.value("ojuny_template_branch") or "").strip()
     origin_url = (global_storage.value("ojuny_origin_url") or "").strip()
     origin_token = (global_storage.value("ojuny_origin_token") or "").strip()
 
@@ -948,8 +952,30 @@ def install():
             )
 
         libcalamares.job.setprogress(0.06)
-        clone_prepared(template_url, template_token, staging)
-        hostname = prepared_hostname(staging)
+        try:
+            clone_prepared(template_url, template_token, template_branch, staging)
+        except Exception as error:
+            raise RuntimeError(
+                "could not clone the prepared template repository {url}: {error}\n"
+                "The install stopped. Close and reopen the installer from the "
+                "Install Ojuny entry, return to the Ojuny template page, correct "
+                "the URL, token or branch, and retry.".format(
+                    url=template_url, error=error
+                )
+            )
+
+        try:
+            hostname = prepared_hostname(staging)
+        except Exception as error:
+            raise RuntimeError(
+                "could not read the hostname from the prepared repository: {error}\n"
+                "The repository must contain modules/07-system/00-host.nix with a "
+                "nixosConfigurations entry. The install stopped. Close and reopen "
+                "the installer from the Install Ojuny entry, return to the Ojuny "
+                "template page, correct the repository, and retry.".format(
+                    error=error
+                )
+            )
 
         libcalamares.job.setprogress(0.18)
         run_script(
@@ -1130,8 +1156,12 @@ def install():
             if origin_token and origin_url.startswith(("http://", "https://")):
                 write_credentials(credential_path, origin_url, origin_token)
     except Exception as error:
-        libcalamares.utils.warning(
-            "could not finish the git setup: {error}".format(error=error)
+        raise RuntimeError(
+            "could not finish the git setup: {error}\n"
+            "The install stopped. Close and reopen the installer from the "
+            "Install Ojuny entry, return to the Git origin page, or to the "
+            "Ojuny template page for a prepared repository, correct the remote "
+            "or token, and retry.".format(error=error)
         )
 
     run_command([cmd("pkexec"), cmd("chown"), "1000:100", repos_dir])
