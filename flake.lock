@@ -106,6 +106,21 @@
     },
     "crane": {
       "locked": {
+        "lastModified": 1789760033,
+        "narHash": "sha256-jtT4yxZpR8seYnlCMMWSSPlFN92zO6ICuZ8pJrmi86k=",
+        "owner": "ipetkov",
+        "repo": "crane",
+        "rev": "73b980519cefc727a5f6cc8e5c0947a2f9be6edd",
+        "type": "github"
+      },
+      "original": {
+        "owner": "ipetkov",
+        "repo": "crane",
+        "type": "github"
+      }
+    },
+    "crane_2": {
+      "locked": {
         "lastModified": 1791754810,
         "narHash": "sha256-cN0Mgk+sQtCJcGWs9H4M0CnLRAuC4I8aCwiBTcBJs6E=",
         "owner": "ipetkov",
@@ -379,7 +394,7 @@
     "dux-shell": {
       "inputs": {
         "dank-qml-common": "dank-qml-common_5",
-        "flake-compat": "flake-compat",
+        "flake-compat": "flake-compat_2",
         "nixpkgs": [
           "ojuny-template",
           "ojuny-desktop",
@@ -440,6 +455,22 @@
       }
     },
     "flake-compat": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1767039857,
+        "narHash": "sha256-vNpUSpF5Nuw8xvDLj2KCwwksIbjua2LZCqhV1LNRDns=",
+        "owner": "NixOS",
+        "repo": "flake-compat",
+        "rev": "5edf11c44bc78a0d334f6334cdaf7d60d732daab",
+        "type": "github"
+      },
+      "original": {
+        "owner": "NixOS",
+        "repo": "flake-compat",
+        "type": "github"
+      }
+    },
+    "flake-compat_2": {
       "flake": false,
       "locked": {
         "lastModified": 1767039857,
@@ -740,6 +771,31 @@
         "type": "github"
       }
     },
+    "lanzaboote": {
+      "inputs": {
+        "crane": "crane",
+        "nixpkgs": [
+          "ojuny-template",
+          "nixpkgs"
+        ],
+        "pre-commit": "pre-commit",
+        "rust-overlay": "rust-overlay"
+      },
+      "locked": {
+        "lastModified": 1790423250,
+        "narHash": "sha256-sr4Kfp6yaXUeyKL6n0Y8/ElcR3momIRC20HFc+LF22s=",
+        "owner": "nix-community",
+        "repo": "lanzaboote",
+        "rev": "c1c5edd31802d181c8aa2c71588995d93425d650",
+        "type": "github"
+      },
+      "original": {
+        "owner": "nix-community",
+        "ref": "v1.2.0",
+        "repo": "lanzaboote",
+        "type": "github"
+      }
+    },
     "mangowm": {
       "inputs": {
         "flake-parts": "flake-parts_4",
@@ -829,7 +885,7 @@
     },
     "nix-regedit": {
       "inputs": {
-        "crane": "crane",
+        "crane": "crane_2",
         "flake-utils": "flake-utils_2",
         "nixpkgs": [
           "ojuny-template",
@@ -860,11 +916,11 @@
         "tinted-theming": "tinted-theming"
       },
       "locked": {
-        "lastModified": 1793300489,
-        "narHash": "sha256-/oEkxPtqunqoPhxGg9vMuMbAkkTlDkx+g4LH1WMlm+E=",
+        "lastModified": 1793453277,
+        "narHash": "sha256-G0T867AN33fy+JoCNqxyC/ZVEUIXsO/oILBBCJ6nwWA=",
         "owner": "SDG-Den",
         "repo": "nix-settings-gui",
-        "rev": "d189a8329d2657562e5be620ec9e40158eb5b0b2",
+        "rev": "c5a6b9dadae0ee39bb99d709f20ca3ad8198f891",
         "type": "github"
       },
       "original": {
@@ -1014,11 +1070,11 @@
         ]
       },
       "locked": {
-        "lastModified": 1793214492,
-        "narHash": "sha256-WDdvlxxhynLshf87NLe/5ZB/m+ZWZg8XHNfqXCtgIqo=",
+        "lastModified": 1793453282,
+        "narHash": "sha256-3g1ZbuBIfU/5goyMBMlwmo8Ss6nxF1lh+9IOQZ6YlW4=",
         "owner": "ojuny-project",
         "repo": "ojuny-cli",
-        "rev": "7e2a4fee3cd83cefe12391b215e78de4452768aa",
+        "rev": "bd216aa5e9d2ce33fd9332e2e71f190f9399f277",
         "type": "github"
       },
       "original": {
@@ -1052,11 +1108,11 @@
         ]
       },
       "locked": {
-        "lastModified": 1793377471,
-        "narHash": "sha256-Zlb/tkyreumOpYQLtXVBkUPwhppyGjB4RWFzSnBktkU=",
+        "lastModified": 1793453280,
+        "narHash": "sha256-sSnO7DCKWbth2bNpBLMz0ooTFILakM+WmspHSag9YAk=",
         "owner": "ojuny-project",
         "repo": "ojuny-desktop",
-        "rev": "9459999a007bdd75eb6f4a399e42552d466a970b",
+        "rev": "8b17ff3d8fb08f7ddb798c2aeb8d0ef2ffcb0a71",
         "type": "github"
       },
       "original": {
@@ -1074,6 +1130,7 @@
         "flake-parts": "flake-parts_2",
         "home-manager": "home-manager",
         "import-tree": "import-tree",
+        "lanzaboote": "lanzaboote",
         "nix-cache-discovery": "nix-cache-discovery_2",
         "nix-cleaner": "nix-cleaner",
         "nix-regedit": "nix-regedit",
@@ -1087,16 +1144,39 @@
         "stylix": "stylix"
       },
       "locked": {
-        "lastModified": 1793399463,
-        "narHash": "sha256-fSuP8jfTAC6f8FPodTfl1AIq6zI3+eOFneRNekKyNYU=",
+        "lastModified": 1793453550,
+        "narHash": "sha256-LJj7Aj60Y2TmAvP7wXW2UVSTCE1OlhV3c4FIqIjaFhE=",
         "owner": "ojuny-project",
         "repo": "ojuny-template",
-        "rev": "54758097d908f169711578071767e6ddfd96a62f",
+        "rev": "75b126a6fae367265b0038e6c6d856236e70f016",
         "type": "github"
       },
       "original": {
         "owner": "ojuny-project",
         "repo": "ojuny-template",
+        "type": "github"
+      }
+    },
+    "pre-commit": {
+      "inputs": {
+        "flake-compat": "flake-compat",
+        "nixpkgs": [
+          "ojuny-template",
+          "lanzaboote",
+          "nixpkgs"
+        ]
+      },
+      "locked": {
+        "lastModified": 1789514889,
+        "narHash": "sha256-PFD1nxptCXJyJoiYO1gf/5Vv43yqGpHtMC6LUhl9/pQ=",
+        "owner": "cachix",
+        "repo": "git-hooks.nix",
+        "rev": "59f4ca0d063a1a3ec722c88b51a33004862e5379",
+        "type": "github"
+      },
+      "original": {
+        "owner": "cachix",
+        "repo": "git-hooks.nix",
         "type": "github"
       }
     },
@@ -1111,6 +1191,28 @@
         ],
         "ojuny-template": "ojuny-template",
         "settings": "settings"
+      }
+    },
+    "rust-overlay": {
+      "inputs": {
+        "nixpkgs": [
+          "ojuny-template",
+          "lanzaboote",
+          "nixpkgs"
+        ]
+      },
+      "locked": {
+        "lastModified": 1789889921,
+        "narHash": "sha256-aL/ogiN7qZCGeNovS1f9hX73jwYIKb4Pcq6AZm57WtY=",
+        "owner": "oxalica",
+        "repo": "rust-overlay",
+        "rev": "1fb104a12a8667045559b2575d6d448ae2fbd99b",
+        "type": "github"
+      },
+      "original": {
+        "owner": "oxalica",
+        "repo": "rust-overlay",
+        "type": "github"
       }
     },
     "scenefx": {
